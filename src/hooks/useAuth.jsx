@@ -18,11 +18,12 @@ export function useAuth(loginType) {
             const response = await axios.post(`${API_URL}${endpoint}`, data, {
                 headers: { "Content-Type": "application/json" },
             });
-
-            const userData = response.data; // Axios automatically parses JSON
+     
+            const userData = response.data.user;
+          
             if (userData._id && userData.email) {
-                localStorage.setItem("userId", userData._id);
-                localStorage.setItem("email", userData.email);
+                sessionStorage.setItem("userId", userData._id);
+                sessionStorage.setItem("email", userData.email);
             }
 
             Swal.fire({
@@ -63,8 +64,8 @@ export function useLogout() {
     const navigate = useNavigate();
     const handleLogOut = () => {
         try {
-            localStorage.removeItem("userId");
-            localStorage.removeItem("email");
+            sessionStorage.removeItem("userId");
+            sessionStorage.removeItem("email");
             navigate("/"); // Redirect to login page
         } catch (error) {
             console.error("Logout failed:", error);
@@ -81,10 +82,10 @@ export function useRegister() {
                 headers: { "Content-Type": "application/json" },
             });
 
-            const data = response.data;
+            const data = response.data.user;
             if (data._id && data.email) {
-                localStorage.setItem("userId", data._id);
-                localStorage.setItem("email", data.email);
+                sessionStorage.setItem("userId", data._id);
+                sessionStorage.setItem("email", data.email);
             }
 
             Swal.fire({
