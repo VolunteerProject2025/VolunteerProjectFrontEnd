@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-
+import Cookies from "js-cookie";
 // Base API URL
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
@@ -22,8 +22,8 @@ export function useAuth(loginType) {
             const userData = response.data.user;
           
             if (userData._id && userData.email) {
-                sessionStorage.setItem("userId", userData._id);
-                sessionStorage.setItem("email", userData.email);
+                Cookies.set("userId", userData._id, { expires: 1, secure: true });
+                Cookies.set("email", userData.email, { expires: 1, secure: true });
             }
 
             Swal.fire({
@@ -64,8 +64,8 @@ export function useLogout() {
     const navigate = useNavigate();
     const handleLogOut = () => {
         try {
-            sessionStorage.removeItem("userId");
-            sessionStorage.removeItem("email");
+            Cookies.remove("userId");
+            Cookies.remove("email");
             navigate("/"); // Redirect to login page
         } catch (error) {
             console.error("Logout failed:", error);
@@ -84,8 +84,9 @@ export function useRegister() {
 
             const data = response.data.user;
             if (data._id && data.email) {
-                sessionStorage.setItem("userId", data._id);
-                sessionStorage.setItem("email", data.email);
+                  // Store user data in cookies (expires in 1 day)
+                  Cookies.set("userId", data._id, { expires: 1, secure: true });
+                  Cookies.set("email", data.email, { expires: 1, secure: true });
             }
 
             Swal.fire({
