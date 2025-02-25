@@ -32,7 +32,7 @@ export function useAuth(loginType) {
                 navigate("/role");
                 return; 
             }
-            navigate("/home"); // Redirect to home after login
+            navigate("/"); // Redirect to home after login
         } catch (error) {
             console.error(`${loginType} Login Error:`, error);
             Swal.fire({
@@ -57,13 +57,13 @@ export function useAuth(loginType) {
 
 // 🔹 Logout Function
 export function useLogout() {
-    const navigate = useNavigate();
+    
     const handleLogOut = async () => {
         try {
             await axios.post(`${API_URL}/logout`, {}, {    
                    headers: { "Content-Type": "application/json" },
             withCredentials: true }); // ✅ Sends request to clear token
-            navigate("/"); // Redirect to login page
+      
         } catch (error) {
             console.error("Logout failed:", error);
         }
@@ -153,7 +153,7 @@ export function useChooseRole() {
                 confirmButtonText: "Continue",
                 backdrop: "rgba(0,0,0,0.7)",
             });
-            navigate("/home"); 
+            navigate("/"); 
         } catch (error) {
             console.error("Registration Error:", error);
             Swal.fire({

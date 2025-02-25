@@ -1,9 +1,6 @@
 import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
-import '../assets/login/css/bootstrap.min.css';
-import '../assets/login/css/fontawesome-all.min.css';
-import '../assets/login/css/iofrm-style.css';
-import '../assets/login/css/iofrm-theme43.css';
+import '../assets/css/login.css';
 import { Link } from "react-router-dom";
 
 export function Login() {
@@ -26,56 +23,49 @@ export function Login() {
     };
 
     return (
-        <div className="form-body form-left">
-            <div className="iofrm-layout">
-                <div className="img-holder">
-                    <div className="bg"></div>
-                </div>
-                <div className="form-holder">
-                    <div className="form-content">
-                        <div className="form-items">
-                            <div className="website-logo-inside logo-normal">
-                                <a href="/">
-                                    <div className="logo">
-                                        <img className="logo-size" src="images/logo-pink.svg" alt="logo" />
-                                    </div>
-                                </a>
-                            </div>
-                            <h3 className="font-md">Get more things done with Login platform.</h3>
-                            <p>Access to the most powerful tool in the entire design and web industry.</p>
-                            <form onSubmit={handleSubmit}>
-                                <input 
-                                    className="form-control" 
-                                    type="email" 
-                                    name="email" 
-                                    placeholder="E-mail Address" 
-                                    value={credentials.email} 
-                                    onChange={handleChange} 
-                                    required 
-                                />
-                                <input 
-                                    className="form-control" 
-                                    type="password" 
-                                    name="password" 
-                                    placeholder="Password" 
-                                    value={credentials.password} 
-                                    onChange={handleChange} 
-                                    required 
-                                />
-                                <div className="form-button d-flex">
-                                    <button type="submit" className="btn btn-primary">Login</button>
-                                    <Link to="/register" className="btn btn-outline-primary">Create account</Link>
-                                </div>
-                            </form>
-                            <div className="other-links">
-                                <span>Or login with</span>
-                                <button onClick={googleLogin} className="btn btn-google">
-                                    <i className="fab fa-google"></i> Google
-                                </button>
-                            </div>
-                        </div>
+        <div className="login-container">
+            <div className="login-box">
+                <h1 className="welcome-text">Welcome Back</h1>
+                <p className="subtitle">Log in to continue</p>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="field-box">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={credentials.email}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
-                </div>
+
+                    <div className="field-box">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={credentials.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <p className="register-link">
+                        Not a member yet?  
+                        <Link to="/register" className="btn-register">Create account</Link>
+                    </p>
+
+                    <button type="submit" className="login-btn">Log In</button>
+
+                    <div className="other-links">
+                        <span>Or login with</span>
+                        <button onClick={googleLogin} className="btn-google">
+                            <i className="fab fa-google"></i> Google
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

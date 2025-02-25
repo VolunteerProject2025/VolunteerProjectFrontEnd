@@ -1,0 +1,111 @@
+/* Centering the login box */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f0f4f8;
+}
+
+/* Login box styling */
+.login-box {
+    background: white;
+    padding: 4em 5em;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 40%;
+}
+
+/* Welcome text */
+.welcome-text {
+    font-size: 2.5em;
+    color: #08376b;
+    font-weight: bold;
+    margin-bottom: 0.3em;
+}
+
+.subtitle {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 2em;
+}
+
+/* Input fields */
+.field-box {
+    text-align: left;
+    margin-bottom: 1.3em;
+}
+
+.field-box label {
+    font-weight: bold;
+    color: #333;
+}
+
+.field-box input {
+    width: 100%;
+    padding: 0.8em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Register link */
+.register-link {
+    margin-top: 0.8em;
+    font-size: 0.9em;
+}
+
+.register-link .btn-register {
+    color: #2968af;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.register-link .btn-register:hover {
+    color: #5a8eca;
+}
+
+/* Login button */
+.login-btn {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1.2em;
+    color: white;
+    background: #08376b;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.2em;
+    transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+    background: #0a4a9a;
+}
+
+/* Google login button */
+.btn-google {
+    width: 100%;
+    margin-top: 1em;
+    padding: 0.7em;
+    font-size: 1em;
+    color: white;
+    background: #db4437;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-google:hover {
+    background: #c1351d;
+}
+
+.other-links {
+    margin-top: 1.5em;
+    font-size: 0.9em;
+}
