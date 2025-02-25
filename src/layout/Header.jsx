@@ -1,47 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useLogout } from "../hooks/useAuth";
-import '../assets/css/header.css';
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
+import { AuthContext } from "../context/AuthContext"; // Import AuthContext
+import '../assets/css/header.css';
 import logo from '../assets/img/volunteer_act_logo.png';
-import { userDataService } from "../hooks/userDataService"; // Import the object with named exports
 
 const Header = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [userRole, setUserRole] = useState(""); // Add state for user role
-    const logout = useLogout(); // Get the logout function from the hook
+    const { user, logout, loading } = useContext(AuthContext); // Access auth context
 
-    // Check authentication status on component mount
-    useEffect(() => {
-        const checkAuth = async () => {
-            const token = Cookies.get("token");
-            if (token) {
-                setIsAuthenticated(true);
-                
-                // Use the fetchUserData method from the imported service
-                const userData = await userDataService.fetchUserData();
-                if (userData) {
-                    setUserName(userData.fullName || userData.name || "User");
-                    setUserRole(userData.role || ""); // Store the user role
-                }
-            } else {
-                setIsAuthenticated(false);
-                setUserName("");
-                setUserRole("");
-            }
-        };
-        
-        checkAuth();
-    }, []);
-
-    // Keep the original logout handling
-    const handleLogOut = async () => {
-        await logout();
-        setIsAuthenticated(false);
-        setUserName("");
-        setUserRole("");
-    };
+    if (loading) {
+        return <div>Loading...</div>; // You can show a loading spinner while fetching the user
+    }
 
     return (
         <header>
@@ -56,14 +24,13 @@ const Header = () => {
             </section>
 
             <ul className="last-links">
-                {isAuthenticated ? (
+                {user ? (
                     <>
                         <li className="user-greeting">
-                            Welcome, {userName}!
-                            {userRole && <span className="user-role">({userRole})</span>}
+                            Welcome, {user.fullName || user.email}!
                         </li>
                         <li>
-                            <button onClick={handleLogOut} className="btn btn-danger">Log Out</button>
+                            <button onClick={logout} className="btn btn-danger">Log Out</button>
                         </li>
                     </>
                 ) : (

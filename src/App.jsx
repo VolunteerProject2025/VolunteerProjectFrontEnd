@@ -4,12 +4,14 @@ import { Home } from './pages/Home'
 import { Register } from './pages/Register'
 import { Role } from './pages/Role'
 import Layout from './layout/Layout'
+import { AuthProvider } from "./context/AuthContext"; 
 function App() {
 
 
   return (
     <div>
-      <HashRouter>
+       <AuthProvider>
+       <HashRouter>
         <Routes>
           <Route path='/login' element={
             <Layout>
@@ -40,6 +42,8 @@ function App() {
           } />
         </Routes>
       </HashRouter>
+       </AuthProvider>
+      
     </div>
 
   )
