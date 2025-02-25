@@ -1,15 +1,22 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext"; // Import AuthContext
 import '../assets/css/header.css';
 import logo from '../assets/img/volunteer_act_logo.png';
-
+import imgProfile from '../assets/img/user_img.png'
 const Header = () => {
-    const { user, logout, loading } = useContext(AuthContext); // Access auth context
+    const navigate = useNavigate();
 
+    const { user, logout, loading } = useContext(AuthContext); // Access auth context
+    
     if (loading) {
         return <div>Loading...</div>; // You can show a loading spinner while fetching the user
     }
+    const handleProfileClick = async () => {
+        // Navigate to Profile page
+        navigate('/profile');
+        // You can fetch user details here if needed
+    };
 
     return (
         <header>
@@ -27,7 +34,8 @@ const Header = () => {
                 {user ? (
                     <>
                         <li className="user-greeting">
-                            Welcome, {user.fullName || user.email}!
+                            Welcome, {user.fullName}!
+                            <li><Link to='/profile'><img src={user.img_profile|| imgProfile} alt="User Profile"/></Link></li>
                         </li>
                         <li>
                             <Link onClick={logout} className="btn btn-danger">

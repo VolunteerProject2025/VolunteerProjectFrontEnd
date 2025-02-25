@@ -1,6 +1,6 @@
-import { useRegister } from '../hooks/useAuth';
+import { useRegister } from '../hooks/useAuthHook';
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuthHook';
 import '../assets/css/login.css';
 
 import { Link } from "react-router-dom";
@@ -71,7 +71,7 @@ export function Register() {
                             <Link to="/" className="btn btn-outline-primary"> Login</Link>
 
                         </p>
-                        <button type="submit" className="btn btn-primary">Register</button>
+                        <button type="submit" className="btn login-btn">Register</button>
 
 
                         <div className="other-links">

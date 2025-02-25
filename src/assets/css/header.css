@@ -1,4 +1,3 @@
-
 header {
     display: flex;
     padding: 0.1% 10%;
@@ -12,7 +11,7 @@ header section.img-logo {
 }
 
 header section.img-logo img {
-    width: 100%
+    width: 100%;
 }
 
 header section.search-bar-section {
@@ -45,7 +44,8 @@ header ul.last-links {
 
 header ul.last-links li {
     list-style: none;
-    flex-grow: 1; /* Allow links to expand */
+    display: flex; /* Use flex to align items inline */
+    align-items: center; /* Center align items vertically */
 }
 
 header ul.last-links li a {
@@ -56,6 +56,14 @@ header ul.last-links li a {
     padding: 0.5em 1em; /* Add padding to accommodate longer names */
     white-space: nowrap; /* Prevent text from wrapping */
     display: inline-block; /* Ensure it behaves like a button */
+}
+
+header ul.last-links li img {
+    width: 40px; /* Set a specific width for the profile image */
+    height: 40px; /* Set a specific height for the profile image */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Maintain aspect ratio */
+    margin-right: 0.5em; /* Add space between image and text */
 }
 
 header ul.last-links li:nth-child(2) a {

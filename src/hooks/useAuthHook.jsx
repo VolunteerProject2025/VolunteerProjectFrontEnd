@@ -87,6 +87,7 @@ export function useLogout() {
 
 // 🔹 Registration Hook
 export function useRegister() {
+
     const handleRegister = async (userData) => {
         try {
             await axios.post(`${API_URL}/register`, userData, {
@@ -191,6 +192,7 @@ export function useChooseRole() {
 
 export function useAuthStatus() {
     const [userName, setUserName] = useState("");
+    const [userImg, setUserImg] = useState("");
 
     useEffect(() => {
         // Fetch the current user using the /me endpoint to check authentication status
@@ -201,7 +203,8 @@ export function useAuthStatus() {
                 });
                 const user = response.data.user;
                 if (user) {
-                    setUserName(user.fullName || user.email);
+                    setUserName(user.fullName);
+                    setUserImg(user.img_profile)
                 }
             } catch (error) {
                 console.error("Failed to fetch user:", error);
@@ -211,5 +214,39 @@ export function useAuthStatus() {
         fetchUserStatus();
     }, []);  // This will run only once, on component mount
 
-    return { userName };
+    return { userName ,userImg};
+}
+
+export function useChangePassword() {
+    const handleChangePassword = async (oldPassword, newPassword) => {
+        try {
+            const response = await axios.post(
+                `${API_URL}/change-password`, 
+                { oldPassword, newPassword }, 
+                {
+                    headers: { "Content-Type": "application/json" },
+                    withCredentials: true, // ✅ Sends cookies with request
+                }
+            );
+
+            Swal.fire({
+                title: "Success!",
+                text: response.data.message || "Password changed successfully!",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK",
+            });
+
+        } catch (error) {
+            console.error("Change Password Error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: error.response?.data?.message || "Failed to change password!",
+                icon: "error",
+                confirmButtonText: "Try Again",
+            });
+        }
+    };
+
+    return handleChangePassword;
 }

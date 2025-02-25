@@ -16,7 +16,7 @@ export function Home() {
                 <img src="../images/volunteer_act_logo_cut.png" alt="logo-img" />
             </div>
         </section>
-
+        <main id="explore">
         <section className="upcoming-events">
             <div className="title-container">
                 <h2>Upcoming events</h2>
@@ -150,6 +150,8 @@ export function Home() {
               
             </div>
         </section>
+        </main>
+        
     </div>
 
     );
