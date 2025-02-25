@@ -10,7 +10,7 @@ export function Register() {
     const registerUser = useRegister(); // Custom hook for registration
     const googleLogin = useAuth('google'); // Google login
     
-    const [userData, setUserData] = useState({  email: '', password: '' });
+    const [userData, setUserData] = useState({ fullName: '',  email: '', password: '' });
 
     const handleChange = (e) => {
         setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -44,7 +44,15 @@ export function Register() {
                             <h3 className="font-md">Join us and explore more features.</h3>
                             <p>Sign up to get access to the best design and web tools.</p>
                             <form onSubmit={handleSubmit}>
-                               
+                            <input 
+                                    className="form-control" 
+                                    type="fullName" 
+                                    name="fullName" 
+                                    placeholder="Full Name" 
+                                    value={userData.fullName} 
+                                    onChange={handleChange} 
+                                    required 
+                                />
                                 <input 
                                     className="form-control" 
                                     type="email" 

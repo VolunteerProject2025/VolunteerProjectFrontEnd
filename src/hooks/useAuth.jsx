@@ -4,11 +4,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import Cookies from "js-cookie";
 // Base API URL
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
-// 🔹 Login Hook (Supports Google & Email Login)
 export function useAuth(loginType) {
     const navigate = useNavigate();
 
@@ -17,15 +15,10 @@ export function useAuth(loginType) {
             const endpoint = loginType === "google" ? "/google" : "/login";
             const response = await axios.post(`${API_URL}${endpoint}`, data, {
                 headers: { "Content-Type": "application/json" },
+                withCredentials: true,
             });
      
-            const userData = response.data.user;
-          
-            if (userData._id && userData.email) {
-                Cookies.set("userId", userData._id, { expires: 1, secure: true });
-                Cookies.set("email", userData.email, { expires: 1, secure: true });
-            }
-
+        
             Swal.fire({
                 title: "Success!",
                 text: "Login successful! Redirecting...",
@@ -34,7 +27,11 @@ export function useAuth(loginType) {
                 confirmButtonText: "Continue",
                 backdrop: "rgba(0,0,0,0.7)",
             });
-
+            const user = response.data.user
+            if(!user.role){
+                navigate("/role");
+                return; 
+            }
             navigate("/home"); // Redirect to home after login
         } catch (error) {
             console.error(`${loginType} Login Error:`, error);
@@ -50,11 +47,10 @@ export function useAuth(loginType) {
     return loginType === "google"
         ? useGoogleLogin({
             onSuccess: (response) => {
-                console.log("Access Token:", response.access_token);
-                handleLogin({ token: response.access_token }); // Send token to backend
+                handleLogin({ code: response.code }); // Send token to backend
             },
             onError: (error) => console.error("Login Failed:", error),
-            flow: "implicit",
+            flow: "auth-code",
         })
         : handleLogin;
 }
@@ -62,10 +58,11 @@ export function useAuth(loginType) {
 // 🔹 Logout Function
 export function useLogout() {
     const navigate = useNavigate();
-    const handleLogOut = () => {
+    const handleLogOut = async () => {
         try {
-            Cookies.remove("userId");
-            Cookies.remove("email");
+            await axios.post(`${API_URL}/logout`, {}, {    
+                   headers: { "Content-Type": "application/json" },
+            withCredentials: true }); // ✅ Sends request to clear token
             navigate("/"); // Redirect to login page
         } catch (error) {
             console.error("Logout failed:", error);
@@ -80,14 +77,10 @@ export function useRegister() {
         try {
             const response = await axios.post(`${API_URL}/register`, userData, {
                 headers: { "Content-Type": "application/json" },
+                withCredentials: true,
             });
 
-            const data = response.data.user;
-            if (data._id && data.email) {
-                  // Store user data in cookies (expires in 1 day)
-                  Cookies.set("userId", data._id, { expires: 1, secure: true });
-                  Cookies.set("email", data.email, { expires: 1, secure: true });
-            }
+         
 
             Swal.fire({
                 title: "Success!",
@@ -139,4 +132,37 @@ export function useVerifyEmail() {
     }, [searchParams, navigate]);
 
     return message;
+}
+
+export function useChooseRole() {
+    const navigate = useNavigate();
+    const handleChooseRole = async (roleData) => {
+        try {
+            const response = await axios.post(`${API_URL}/role`, roleData, {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true,
+            });
+
+         
+
+            Swal.fire({
+                title: "Success!",
+                text: "Role successfully Change!",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Continue",
+                backdrop: "rgba(0,0,0,0.7)",
+            });
+            navigate("/home"); 
+        } catch (error) {
+            console.error("Registration Error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: error.response?.data?.message || "Registration failed!",
+                icon: "error",
+                confirmButtonText: "Try Again",
+            });
+        }
+    }
+    return handleChooseRole
 }
