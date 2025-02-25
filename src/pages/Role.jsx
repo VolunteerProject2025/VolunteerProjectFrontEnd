@@ -37,15 +37,16 @@ export function Role() {
             <form onSubmit={handleSubmit}>
                                 <div className="btn-group w-100">
                                     <button
-                                        type="button"
-                                        className={`btn ${roleData.role === 'Volunteer' ? 'btn-primary active' : 'btn-outline-primary'}`}
+                                    type='button'
+                                        className={`btn ${roleData.role === 'Volunteer' ?  'btn-google':'login-btn' }`}
                                         onClick={() => handleRoleSelect('Volunteer')}
                                     >
                                         Volunteer
                                     </button>
                                     <button
-                                        type="button"
-                                        className={`btn ${roleData.role === 'Organization' ? 'btn-primary active' : 'btn-outline-primary'}`}
+                                    type='button'
+
+                                        className={`btn ${roleData.role === 'Organization' ?  'btn-google':'login-btn'}`}
                                         onClick={() => handleRoleSelect('Organization')}
                                     >
                                         Organization
@@ -54,7 +55,7 @@ export function Role() {
                                 <div className="form-button d-flex mt-4">
                                     <button 
                                         type="submit" 
-                                        className="btn btn-primary"
+                                        className="btn login-btn"
                                         disabled={!roleData.role}
                                     >
                                         Register

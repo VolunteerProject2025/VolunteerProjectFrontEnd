@@ -30,8 +30,13 @@ export function useAuth(loginType) {
                 backdrop: "rgba(0,0,0,0.7)",
             });
 
-            const user = response.data.user; // Get user data from login response
+            const user = response.data.user;
             login(user); // Update global auth state
+             // Get user data from login response
+            if(user.role==null){
+                navigate("/role");
+                return;
+            }
 
             navigate("/");
         } catch (error) {

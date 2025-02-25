@@ -30,7 +30,9 @@ const Header = () => {
                             Welcome, {user.fullName || user.email}!
                         </li>
                         <li>
-                            <button onClick={logout} className="btn btn-danger">Log Out</button>
+                            <Link onClick={logout} className="btn btn-danger">
+                                Log Out
+                            </Link>
                         </li>
                     </>
                 ) : (

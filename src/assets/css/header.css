@@ -32,31 +32,43 @@ header section.search-bar-section input {
     margin-left: 7%;
 }
 
-
 header ul.last-links {
     display: flex;
     padding: 0;
     margin-left: auto;
-    width: 11%;
+    width: auto; /* Make width flexible */
+    min-width: 15%; /* Ensure it doesn't shrink too much */
     justify-content: space-between;
     align-items: center;
+    gap: 10px; /* Add spacing between links */
 }
 
 header ul.last-links li {
     list-style: none;
+    flex-grow: 1; /* Allow links to expand */
 }
 
 header ul.last-links li a {
     text-decoration: none;
     color: rgb(0, 0, 0);
-    font-size: 1em;
+    font-size: 1.1em; /* Slightly increase font size */
     font-weight: 600;
+    padding: 0.5em 1em; /* Add padding to accommodate longer names */
+    white-space: nowrap; /* Prevent text from wrapping */
+    display: inline-block; /* Ensure it behaves like a button */
 }
 
 header ul.last-links li:nth-child(2) a {
     background-color: #08376b;
-    padding: 0.7em;
+    padding: 0.7em 1.2em; /* Increase padding for better visibility */
     color: rgb(255, 255, 255);
     border-radius: 5px;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
+/* Ensure the logout button remains visible */
+header ul.last-links li:last-child a {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 0.7em 1.5em; /* Make sure the log out button is fully shown */
+}
