@@ -36,7 +36,7 @@ const Header = () => {
                         <li className="user-greeting">
                             Welcome, {user.fullName}!
                             <li>
-                                <Link to={user.role === "Organization" ? "/organization-profile" : "/profile"}>
+                                <Link to={user.role === "Organization" ? "/org-profile" : "/profile"}>
                                     <img src={user.img_profile || imgProfile} alt="User Profile" />
                                 </Link>
                             </li>

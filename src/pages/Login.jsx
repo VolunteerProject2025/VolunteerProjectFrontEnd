@@ -57,9 +57,9 @@ export function Login() {
                         Not a member yet?  
                         <Link to="/register" className="btn-register">Create account</Link>
                     </p>
-
+        
                     <button type="submit" className="login-btn">Log In</button>
-
+                    <Link to='/forgot-password' className="btn-register">Forgot Password</Link>
                     <div className="other-links">
                         <span>Or login with</span>
                         <button onClick={googleLogin} className="btn-google">

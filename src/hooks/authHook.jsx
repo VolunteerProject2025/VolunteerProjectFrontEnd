@@ -1,7 +1,6 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { AuthContext } from '../context/AuthContext'; 
@@ -117,35 +116,6 @@ export function useRegister() {
     return handleRegister;
 }
 
-// 🔹 Email Verification Hook
-export function useVerifyEmail() {
-    const [searchParams] = useSearchParams();
-    const [message, setMessage] = useState("Verifying email...");
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const verifyEmail = async () => {
-            const token = searchParams.get("token");
-            if (!token) {
-                setMessage("Invalid verification link.");
-                return;
-            }
-
-            try {
-                const response = await axios.get(`${API_URL}/verify_email?token=${token}`);
-                setMessage(response.data.message || "Email verified successfully! Redirecting to login...");
-                setTimeout(() => navigate("/"), 3000);
-            } catch (error) {
-                console.error("Verification Error:", error);
-                setMessage(error.response?.data?.message || "Error verifying email.");
-            }
-        };
-
-        verifyEmail();
-    }, [searchParams, navigate]);
-
-    return message;
-}
 
 // 🔹 Choose Role Hook
 export function useChooseRole() {
@@ -249,4 +219,60 @@ export function useChangePassword() {
     };
 
     return handleChangePassword;
+}
+export function useForgotPassword() {
+    const handleForgotPassword = async (email) => {
+        try {
+            const response = await axios.post(`${API_URL}/forgot-password`, { email });
+
+            Swal.fire({
+                title: "Success!",
+                text: response.data.message || "Password reset link sent to your email!",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK",
+            });
+        } catch (error) {
+            console.error("Forgot Password Error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: error.response?.data?.message || "Failed to send reset link!",
+                icon: "error",
+                confirmButtonText: "Try Again",
+            });
+        }
+    };
+
+    return handleForgotPassword;
+}
+
+// 🔹 Reset Password Hook
+export function useResetPassword() {
+    const navigate = useNavigate();
+
+    const handleResetPassword = async (token, newPassword) => {
+        try {
+            const response = await axios.post(`${API_URL}/reset-password`, { token, newPassword });
+
+            Swal.fire({
+                title: "Success!",
+                text: response.data.message || "Password reset successful! You can now log in.",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK",
+            });
+
+            setTimeout(() => navigate("/login"), 2000);
+        } catch (error) {
+            console.error("Reset Password Error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: error.response?.data?.message || "Failed to reset password!",
+                icon: "error",
+                confirmButtonText: "Try Again",
+            });
+        }
+    };
+
+    return handleResetPassword;
 }
