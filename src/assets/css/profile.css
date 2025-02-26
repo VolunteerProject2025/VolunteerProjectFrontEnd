@@ -1,0 +1,129 @@
+
+
+.content-edit {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.change-password {
+    margin-top: 20px;
+    text-align: center;
+}
+.change-password-link {
+    display: inline-block;
+    background-color: #007bff;  /* Blue color */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.change-password-link:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+.info-section {
+    display: flex;
+    padding: 2%;
+    width: 70%; /* Adjust width as needed */
+    max-width: 900px; /* Set a maximum width for larger screens */
+    border-radius: 10px; /* Smoother corners */
+    background-color: rgba(255, 255, 255, 0.9); /* Light background color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Depth with shadow */
+    margin: 0 auto; /* Center the section */
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35%; /* Width of the left section */
+    padding: 1.5em; /* Padding for spacing */
+    background-color: #f9f9f9; /* Light background color for distinction */
+    border-radius: 10px; /* Match border radius with the outer box */
+    border: 1px solid #dcdcdc; /* Light border for the left section */
+}
+
+.left .img-container {
+    width: 12em; /* Profile image size */
+    height: 12em; /* Profile image size */
+}
+
+.left .img-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #08376b; /* Thicker border around profile image */
+}
+
+.left .user-info {
+    text-align: center; /* Centered user info */
+    margin-top: 1em; /* Added margin for spacing */
+}
+
+.left .user-info .name {
+    font-size: 1.5em;
+    font-weight: bold; /* Made name bold */
+    color: #08376b; /* Darker color for better contrast */
+    margin: 0.5em 0; /* Adjusted margin */
+}
+
+.right {
+    width: 65%; /* Width of the right section */
+    margin-left: 2%; /* Margin to separate from the left section */
+    padding: 1.5em; /* Padding for spacing */
+    background-color: #f9f9f9; /* Light background color for distinction */
+    border-radius: 10px; /* Match border radius with the outer box */
+    border: 1px solid #dcdcdc; /* Light border for the right section */
+}
+
+.right > h3 {
+    margin: 0;
+    border-bottom: 2px solid #08376b; /* Thicker border for header */
+    font-size: 1.5em;
+    color: #08376b;
+    margin-bottom: 1em;
+}
+
+.all-fields {
+    display: flex;
+    flex-direction: column; /* Changed to column for better alignment */
+    gap: 1.5em; /* Increased gap for spacing */
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: rgb(22, 36, 89);
+}
+
+.field label {
+    margin-bottom: 0.5em; /* Spacing for labels */
+    font-weight: bold; /* Bold labels */
+}
+
+.field p {
+    border: solid 1px rgb(160, 159, 161);
+    border-radius: 4px; /* Slightly rounded corners */
+    padding: 1em; /* Adjusted padding */
+    color: rgb(107, 107, 107);
+    font-size: 1.1em;
+    background-color: rgba(240, 248, 255, 0.849);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .info-section {
+        flex-direction: column; /* Stack sections on smaller screens */
+        width: 90%; /* Full width for each section */
+    }
+    .left, .right {
+        width: 100%; /* Full width for each section */
+        margin-left: 0; /* Remove margin */
+        margin-bottom: 1em; /* Add space between stacked sections */
+    }
+}
