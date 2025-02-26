@@ -1,4 +1,4 @@
-import { useChangePassword } from "../hooks/useAuthHook";
+import { useChangePassword } from "../hooks/authHook";
 import { useState } from "react";
 import '../assets/css/login.css';
 

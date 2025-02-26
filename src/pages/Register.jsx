@@ -1,6 +1,6 @@
-import { useRegister } from '../hooks/useAuthHook';
+import { useRegister } from '../hooks/authHook';
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuthHook';
+import { useAuth } from '../hooks/authHook';
 import '../assets/css/login.css';
 
 import { Link } from "react-router-dom";
@@ -68,7 +68,7 @@ export function Register() {
 
                         <p className="register-link">
                             Already have an account?
-                            <Link to="/" className="btn btn-outline-primary"> Login</Link>
+                            <Link to="/login" className="btn-register"> Login</Link>
 
                         </p>
                         <button type="submit" className="btn login-btn">Register</button>

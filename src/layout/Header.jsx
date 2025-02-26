@@ -8,7 +8,7 @@ const Header = () => {
     const navigate = useNavigate();
 
     const { user, logout, loading } = useContext(AuthContext); // Access auth context
-    
+
     if (loading) {
         return <div>Loading...</div>; // You can show a loading spinner while fetching the user
     }
@@ -35,7 +35,12 @@ const Header = () => {
                     <>
                         <li className="user-greeting">
                             Welcome, {user.fullName}!
-                            <li><Link to='/profile'><img src={user.img_profile|| imgProfile} alt="User Profile"/></Link></li>
+                            <li>
+                                <Link to={user.role === "Organization" ? "/organization-profile" : "/profile"}>
+                                    <img src={user.img_profile || imgProfile} alt="User Profile" />
+                                </Link>
+                            </li>
+
                         </li>
                         <li>
                             <Link onClick={logout} className="btn btn-danger">

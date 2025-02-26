@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../assets/css/login.css';
 
-import { useChooseRole } from '../hooks/useAuthHook'
+import { useChooseRole } from '../hooks/authHook'
 
 export function Role() {
     const chooseRole = useChooseRole();

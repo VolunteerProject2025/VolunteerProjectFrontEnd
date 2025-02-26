@@ -8,7 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { Profile } from './pages/Profile';
 import { ChangePassword } from './pages/ChangePassword';
 import PrivateRoute from './context/PrivateRoute'; // Import the PrivateRoute component
-
+import { Unauthorized } from './pages/Unauthorized';
 function App() {
     return (
         <div>
@@ -18,6 +18,8 @@ function App() {
                         <Route path='/login' element={<Layout><Login /></Layout>} />
                         <Route path='/register' element={<Layout><Register /></Layout>} />
                         <Route path='/' element={<Layout><Home /></Layout>} />
+                        <Route path="/unauthorized" element={<Unauthorized />} />
+
                         
                         {/* Protect these routes with PrivateRoute */}
                         <Route path='/change-password' element={
@@ -26,7 +28,7 @@ function App() {
                             </PrivateRoute>
                         } />
                         <Route path='/profile' element={
-                            <PrivateRoute>
+                            <PrivateRoute allowedRoles={['Volunteer','Admin']}>
                                 <Layout><Profile /></Layout>
                             </PrivateRoute>
                         } />

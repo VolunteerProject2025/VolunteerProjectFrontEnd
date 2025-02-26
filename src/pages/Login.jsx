@@ -1,4 +1,4 @@
-import { useAuth } from '../hooks/useAuthHook';
+import { useAuth } from '../hooks/authHook';
 import { useState } from 'react';
 import '../assets/css/login.css';
 import { Link } from "react-router-dom";
@@ -34,6 +34,7 @@ export function Login() {
                         <input
                             type="email"
                             name="email"
+                            placeholder="Email"
                             value={credentials.email}
                             onChange={handleChange}
                             required

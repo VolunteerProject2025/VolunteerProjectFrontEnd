@@ -5,14 +5,18 @@ import '../assets/css/body.css'
 const Layout = ({ children }) => {
     return (
         <>
-          
-                <Header />
-              
-                    {children}
-            
-                <Footer />
 
-            
+            <div style={{ position: "fixed", top: 0, width: "100%", zIndex: 1000 }}>
+                <Header />
+            </div>
+
+            {/* Push content down to avoid overlap */}
+            <div style={{ paddingTop: "80px" }}>
+                {children}
+            </div>
+            <Footer />
+
+
         </>
     );
 };

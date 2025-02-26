@@ -1,7 +1,9 @@
 header {
     display: flex;
     padding: 0.1% 10%;
+    background: white;
     border-bottom: solid 1px rgb(190, 190, 190);
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 header section.img-logo {
