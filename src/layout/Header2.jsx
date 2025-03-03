@@ -129,7 +129,13 @@ const Header2 = () => {
                             <div className="dropdown-trigger d-none d-sm-block">
                                 <div className="dropdown-trigger__item"></div>
                             </div>
-                            <div className="header-logo"><a className="header-logo__link" href="index.html"><img className="header-logo__img" src={logo} alt="logo" /></a></div>
+                            <div className="header-logo">
+                                <a className="header-logo__link" href="">
+                                <Link to="/" >
+                                <img className="header-logo__img" src={logo} alt="logo" />
+
+                                </Link>
+                                </a></div>
                         </div>
                         <div className="col-auto">
                             <nav>
