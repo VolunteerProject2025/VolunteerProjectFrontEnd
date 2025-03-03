@@ -1,7 +1,5 @@
-import axios from "axios";
 import { AuthContext } from '../context/AuthContext';
-const API_URL = `${import.meta.env.VITE_API_URL}/org`;
-
+import { useContext } from "react";
 
 export function userProfile() {
     const { user } = useContext(AuthContext); // Access the user from AuthContext
@@ -14,15 +12,7 @@ export function userProfile() {
 }
 
 export function organizationProfile() {
-    const handleOrgDetail = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/org-details`, { withCredentials: true });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching organization details:', error);
-            throw error;
-        }
-    };
+   const { organization } = useContext(AuthContext); // Access the organization from Auth
 
-    return { handleOrgDetail }; // Return the function so it can be used elsewhere
+    return { organization }; // Return the function so it can be used elsewhere
 }

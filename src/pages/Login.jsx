@@ -15,6 +15,15 @@ export function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        // Regular expression for validating email
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+        if (!emailPattern.test(credentials.email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
+    
         try {
             await normalLogin(credentials); // Calls normal login function
         } catch (error) {

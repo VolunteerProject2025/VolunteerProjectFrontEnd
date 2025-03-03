@@ -26,9 +26,7 @@ const Header = () => {
                 </Link>
             </section>
 
-            <section className="search-bar-section">
-                <input className="search-bar" type="search" placeholder="Search..." />
-            </section>
+        
 
             <ul className="last-links">
                 {user ? (
@@ -36,7 +34,7 @@ const Header = () => {
                         <li className="user-greeting">
                             Welcome, {user.fullName}!
                             <li>
-                                <Link to={user.role === "Organization" ? "/org-profile" : "/profile"}>
+                                <Link to={user.role == "Organization" ? "/org-profile" : "/profile"}>
                                     <img src={user.img_profile || imgProfile} alt="User Profile" />
                                 </Link>
                             </li>
