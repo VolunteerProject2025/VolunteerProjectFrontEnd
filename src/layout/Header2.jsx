@@ -206,38 +206,35 @@ const Header2 = () => {
                                     </ul>
                                 </li>
                             </ul>
-                            <a className="button button--squared" href="#">
-                               <div >
-                               {user ? (
-                                   <span>
-                                          <div className="user-greeting">
-                                            Welcome, {user.fullName}!
-                                            <span>
-                                                <Link to={user.role == "Organization" ? "/org-profile" : "/profile"}>
-                                                    <img src={user.img_profile || imgProfile} alt="User Profile" />
-                                                </Link>
-                                            </span>
 
-                                        </div>
-                                        <div>
-                                            <Link onClick={logout}>
-                                                Log Out
-                                            </Link>
-                                        </div>
-                                   </span>
-                                  
-                                  
-                                ) : (
-                                    <span>
-                                        <div><Link to="/login" className="btn btn-outline-primary">Log In</Link></div>
-                                        <div><Link to="/register" className="btn btn-outline-primary">Sign Up</Link></div>
-                                    </span>
-                                )}
-                             
-                               </div>
-                                
-                               
-                            </a>
+                            {user ? (<>
+                                <span className="button button--squared" >
+                                    <Link to={user.role == "Organization" ? "/org-profile" : "/profile"}>
+                                        Welcome,   {user.fullName}!
+                                    </Link>
+                                </span>
+                                <div className="button button--squared">
+                                    <Link onClick={logout}>
+                                        Log Out
+                                    </Link>
+                                </div>
+
+
+                            </>
+
+
+                            ) : (<>
+                                <span className="button button--squared">
+                                    <div><Link to="/login" >Log In</Link></div>
+
+                                </span>
+                                <span className="button button--squared">
+                                    <div><Link to="/register" >Sign Up</Link></div>
+                                </span>
+                            </>
+
+                            )}
+
                             <div className="dropdown-trigger d-block d-sm-none">
                                 <div className="dropdown-trigger__item"></div>
                             </div>
