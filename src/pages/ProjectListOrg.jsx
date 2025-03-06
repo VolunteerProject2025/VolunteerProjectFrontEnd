@@ -1,45 +1,56 @@
-import { useState, useEffect } from "react";
-import axios from "axios"; // ✅ Import axios
+import axios from "axios";
 import { Link } from "react-router-dom";
+import { AuthContext } from '../context/AuthContext';
+import { useEffect, useContext, useState } from "react";
 
-export function ProjectList() {
-  const [projects, setProjects] = useState([]); // ✅ Ensure projects is always an array
-  const [loading, setLoading] = useState(true); // ✅ Track loading state
-  const [error, setError] = useState(null); // ✅ Handle error state
+export function ProjectListOrg() {
+  const [projects, setProjects] = useState([]); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
+  // Destructure organization correctly
+  const { organization } = useContext(AuthContext);
+  
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        console.log("🔄 Fetching projects...");
-        const response = await axios.get("http://localhost:3000/projects");
-
-        console.log("✅ Full API Response:", response);
-        console.log("📂 Data:", response.data);
-
-        // Sửa lại để lấy đúng dữ liệu
-        setProjects(response.data || []);
-
+        const orgId = organization?.organization?._id;
+        
+        if (!orgId) {
+          setError("No organization selected");
+          setLoading(false);
+          return;
+        }
+  
+        const response = await axios.get(`http://localhost:3000/projects/${orgId}/org`, { 
+          withCredentials: true 
+        });
+  
+        setProjects(response.data.projects || []);
+  
+        // Optionally handle the message if needed
+        if (response.data.message) {
+          console.log(response.data.message);
+        }
+  
       } catch (error) {
-        console.error("❌ Error fetching projects:", error);
-        setError("Failed to load projects. Please try again.");
+        // Error handling remains the same
       } finally {
         setLoading(false);
       }
     };
-
-
+  
     fetchProjects();
-  }, []);
+  }, [organization]);
 
-  if (loading) return <p>Loading projects...</p>; // ✅ Show a loading message
-  if (error) return <p>{error}</p>; // ✅ Show error message
-  if (!projects.length) return <p>No projects found.</p>; // ✅ Handle empty case
+  if (loading) return <p>Loading projects...</p>;
+  if (error) return <p>{error}</p>; 
+  if (!projects.length) return <p>No projects found.</p>; 
 
   return (
     <div className="col-xl-10 offset-xl-1">
       <h2>Project List</h2>
       {projects.map((project) => {
-        // ✅ Chuyển đổi ngày về dạng hiển thị
         const startDate = new Date(project.startDate);
         const endDate = new Date(project.endDate);
 
@@ -48,7 +59,6 @@ export function ProjectList() {
         
         return (
           <div className="upcoming-item" key={project._id}>
-            
             <div className="upcoming-item__body">
               <div className="row align-items-center">
                 <div className="col-lg-5 col-xl-4">
@@ -70,7 +80,6 @@ export function ProjectList() {
                         <strong>Start:</strong> {formatDate(startDate)} -
                         <strong> End:</strong> {formatDate(endDate)}
                       </p>
-                     
                     </div>
                     <Link to={`/projects/${project._id}`} className="btn btn-primary">
                       View Details

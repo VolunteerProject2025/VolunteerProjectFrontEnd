@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export function UpdateProject ()  {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -31,6 +32,7 @@ export function UpdateProject ()  {
 
     const data = await response.json();
     alert(data.success ? "Project updated!" : data.message);
+    navigate(`/projects/${id}`);
   };
 
   return (

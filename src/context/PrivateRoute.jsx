@@ -1,9 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 
-const PrivateRoute = ({ children, allowedRoles }) => {
-    const { user, loading } = useContext(AuthContext);
+const PrivateRoute = ({ children, allowedRoles, requireApprovedOrg = false }) => {
+    const authContext = useContext(AuthContext);
+
+    // Log the entire context to see what's available
+    
+
+    // If context is not available at all
+   
+
+    const { user, loading, organization } = authContext;
+
+    // Detailed logging
+    
 
     if (loading) {
         return <div>Loading...</div>;
@@ -13,10 +24,20 @@ const PrivateRoute = ({ children, allowedRoles }) => {
         return <Navigate to="/login" />;
     }
 
-    if (allowedRoles?.length && !allowedRoles.includes(user.role.charAt(0).toUpperCase() + user.role.slice(1))) {
+    // Role validation
+    const normalizedRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    const isRoleAllowed = !allowedRoles?.length || allowedRoles.includes(normalizedRole);
+
+    // Organization status validation
+    const isOrganizationApproved = !requireApprovedOrg || 
+        (user.role === 'Organization' && organization?.organization?.status === 'Approved');
+
+  
+
+    if (!isRoleAllowed || !isOrganizationApproved) {
+        console.warn('Access Denied - Redirecting to Unauthorized');
         return <Navigate to="/unauthorized" />;
     }
-    
 
     return children;
 };

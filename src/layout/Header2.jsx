@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext"; // Import AuthContext
 import '../assets/css/header.css';
-import logo from '../assets/home/img/logo_mono.png';
+import logo from '../assets/img/volunteer_act_logo.png';
 import imgProfile from '../assets/img/user_img.png'
 const Header2 = () => {
     const navigate = useNavigate();
@@ -126,10 +126,8 @@ const Header2 = () => {
                 <div className="container-fluid">
                     <div className="row no-gutters justify-content-between">
                         <div className="col-auto d-flex align-items-center">
-                            <div className="dropdown-trigger d-none d-sm-block">
-                                <div className="dropdown-trigger__item"></div>
-                            </div>
-                            <div className="header-logo">
+                            
+                            <div style={{marginRight: 30}} className="header-logo">
                                 <a className="header-logo__link" href="">
                                 <Link to="/" >
                                 <img className="header-logo__img" src={logo} alt="logo" />
@@ -141,17 +139,19 @@ const Header2 = () => {
                             <nav>
                                 <ul className="main-menu">
                                     <li className="main-menu__item main-menu__item--has-child main-menu__item--active"><a className="main-menu__link" href="#"><span>Home</span></a>
-                                        <ul className="main-menu__sub-list">
-                                            <li><a href="../index.html"><span>01 Home Color Style</span></a></li>
+                                        {/* <ul className="main-menu__sub-list">
+                                        
                                             <li><a href="../front_2.html"><span>02 Home Color Style</span></a></li>
                                             <li><a href="../front_3.html"><span>03 Home Color Style</span></a></li>
                                             <li><a href="index.html"><span>04 Home Monochrome</span></a></li>
                                             <li className="item--active"><a href="front_2.html"><span>05 Home Monochrome</span></a></li>
                                             <li><a href="front_3.html"><span>06 Home Monochrome</span></a></li>
-                                        </ul>
+                                        </ul> */}
                                     </li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Pages</span></a>
-                                        <ul className="main-menu__sub-list sub-list--style-2">
+                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span> <Link style={{color: "black", textDecoration: 'none'}} to="/post">
+Post
+                                            </Link></span></a>
+                                        {/* <ul className="main-menu__sub-list sub-list--style-2">
                                             <li><a href="about.html"><span>About</span></a></li>
                                             <li><a href="typography.html"> <span>Typography</span></a></li>
                                             <li><a href="donors.html"><span>Donors & Partners</span></a></li>
@@ -166,7 +166,10 @@ const Header2 = () => {
                                             <li><a href="pricing.html"><span>Pricing Plans</span></a></li>
                                             <li><a href="faq.html"><span>FAQ</span></a></li>
                                             <li><a href="404.html"><span>404 Page</span></a></li>
-                                        </ul>
+                                            <li><span> <Link to="/post" className="btn btn-outline-primary">
+Post
+                                            </Link></span></li>
+                                        </ul> */}
                                     </li>
                                     <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Causes</span></a>
                                         <ul className="main-menu__sub-list">
@@ -186,7 +189,7 @@ const Header2 = () => {
                                         </ul>
                                     </li>
                                     <li className="main-menu__item"><a className="main-menu__link" href="contacts.html"><span>Contacts</span></a></li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Elements</span></a>
+                                    {/* <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Elements</span></a>
                                         <ul className="main-menu__sub-list">
                                             <li><a href="alerts.html"><span>Alerts</span></a></li>
                                             <li><a href="team.html"><span>Team</span></a></li>
@@ -197,7 +200,7 @@ const Header2 = () => {
                                             <li><a href="counters.html"><span>Counters</span></a></li>
                                             <li><a href="icons.html"><span>Icons</span></a></li>
                                         </ul>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </nav>
                         </div>
@@ -215,12 +218,12 @@ const Header2 = () => {
 
                             {user ? (<>
                                 <span className="button button--squared" >
-                                    <Link to={user.role == "Organization" ? "/org-profile" : "/profile"}>
+                                    <Link style={{color: "black"}} to={user.role == "Organization" ? "/org-profile" : "/profile"}>
                                         Welcome,   {user.fullName}!
                                     </Link>
                                 </span>
                                 <div className="button button--squared">
-                                    <Link onClick={logout}>
+                                    <Link style={{color: "black"}} onClick={logout}>
                                         Log Out
                                     </Link>
                                 </div>
@@ -231,11 +234,11 @@ const Header2 = () => {
 
                             ) : (<>
                                 <span className="button button--squared">
-                                    <div><Link to="/login" >Log In</Link></div>
+                                    <div><Link style={{color: "black"}} to="/login" >Log In</Link></div>
 
                                 </span>
                                 <span className="button button--squared">
-                                    <div><Link to="/register" >Sign Up</Link></div>
+                                    <div><Link style={{color: "black"}} to="/register" >Sign Up</Link></div>
                                 </span>
                             </>
 

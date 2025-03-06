@@ -1,0 +1,85 @@
+.promo-primary {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+.promo-primary .img--bg {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.promo-primary__description {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+}
+.promo-primary__pre-title {
+    font-size: 18px;
+    color: #f1c40f;
+}
+.promo-primary__title {
+    font-size: 48px;
+    margin: 0;
+}
+.events-inner {
+    position: relative;
+    padding: 50px 0;
+}
+.events-inner__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+}
+.upcoming-item {
+    display: flex;
+    margin-bottom: 30px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.upcoming-item__date {
+    width: 80px;
+    text-align: center;
+    background: #f1c40f;
+    color: white;
+    padding: 10px;
+}
+.upcoming-item__date span {
+    display: block;
+}
+.upcoming-item__body {
+    flex: 1;
+    padding: 20px;
+}
+.upcoming-item__img img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.upcoming-item__description {
+    padding: 0 20px;
+}
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.button-primary {
+    background: #3498db;
+    color: white;
+}
+.button-danger {
+    background: #e74c3c;
+    color: white;
+}
+.bottom-background {
+    padding: 20px 0;
+}
+.background--brown {
+    background: #8d5524;
+}

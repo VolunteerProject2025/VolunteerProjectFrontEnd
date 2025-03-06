@@ -5,11 +5,7 @@ const Footer2 = () => {
        
                 <div className="row flex-none">
                     <div className="col-sm-6 col-lg-3">
-                        <div className="footer-logo">
-                            <a className="footer-logo__link" href="index.html">
-                                <img className="footer-logo__img" src="img/logo_white.png" alt="logo"/>
-                            </a>
-                        </div>
+                        
                         <div className="footer-contacts">
                             <p className="footer-contacts__address">Elliott Ave, Parkville VIC 3052, Melbourne Canada</p>
                             <p className="footer-contacts__phone">Phone: <a href="tel:+31859644725">+31 85 964 47 25</a></p>

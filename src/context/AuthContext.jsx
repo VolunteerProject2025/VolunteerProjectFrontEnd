@@ -4,13 +4,13 @@ import axios from "axios";
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 const ORG_API_URL = `${import.meta.env.VITE_API_URL}/org`;
 
-export const AuthContext = createContext();
+export const    AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [organization, setOrganization] = useState(null);
-    const fetchOrganization = async () => {
+     const fetchOrganization = async () => {
         try {
             const response = await axios.get(`${ORG_API_URL}/org-details`, { withCredentials: true });
             setOrganization(response.data);
@@ -39,7 +39,9 @@ export const AuthProvider = ({ children }) => {
 
         fetchUser();
     }, []);
-
+    const updateOrganization = (updatedOrg) => {
+        setOrganization(updatedOrg);
+    };
     const login = (userData) => {
         setUser(userData);
         if (userData.role =="Organization") {
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, organization, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, organization, login, logout,updateOrganization }}>
             {children}
         </AuthContext.Provider>
     );
