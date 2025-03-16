@@ -17,7 +17,7 @@ export function ProjectList() {
         console.log("📂 Data:", response.data);
 
         // Sửa lại để lấy đúng dữ liệu
-        setProjects(response.data || []);
+        setProjects(response.data.data || []);
 
       } catch (error) {
         console.error("❌ Error fetching projects:", error);

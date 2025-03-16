@@ -17,3 +17,15 @@ export const getAllOrgw = () => {
 export const getAllOrg2 = () => {
     return axios.get(API_URL);
 };
+
+export const joinProject = (projectId) => {
+    return axios.post(`${API_URL}/${projectId}/join`, {}, {
+        withCredentials: true
+    });
+};
+
+export const getProjectVolunteers = (projectId) => {
+    return axios.get(`${API_URL}/${projectId}/volunteers`, {
+        withCredentials: true
+    });
+};

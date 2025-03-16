@@ -5,6 +5,7 @@ import { Register } from './pages/Register';
 import { Role } from './pages/Role';
 import { AuthProvider } from "./context/AuthContext";
 import { Profile } from './pages/Profile';
+import { ProfileEdit } from "./pages/ProfileEdit"; 
 import { ChangePassword } from './pages/ChangePassword';
 import PrivateRoute from './context/PrivateRoute'; // Import the PrivateRoute component
 import { Unauthorized } from './pages/Unauthorized';
@@ -68,8 +69,8 @@ function App() {
                                 <Layout2><ChangePassword /></Layout2>
 </PrivateRoute>
                         } />
-                        <Route path="/project" element={<Layout2><ProjectList /></Layout2>} />
-                        <Route path="/project-org" element={<Layout2><ProjectListOrg /></Layout2>} />
+                        <Route path="/projects" element={<Layout2><ProjectList /></Layout2>} />
+                        <Route path="/projects-org" element={<Layout2><ProjectListOrg /></Layout2>} />
 
                         <Route path='/create' element={
                             <PrivateRoute 
@@ -92,6 +93,11 @@ function App() {
                         <Route path='/profile' element={
                             <PrivateRoute allowedRoles={['Volunteer', 'Admin']}>
                                 <Layout2><Profile /></Layout2>
+                            </PrivateRoute>
+                        } />
+                        <Route path='/edit-profile' element={
+                            <PrivateRoute allowedRoles={['Volunteer', 'Admin']}>
+                                <Layout2><ProfileEdit /></Layout2>
                             </PrivateRoute>
                         } />
                         <Route path='/org-profile' element={

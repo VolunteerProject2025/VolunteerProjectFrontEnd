@@ -4,13 +4,14 @@ import axios from "axios";
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 const ORG_API_URL = `${import.meta.env.VITE_API_URL}/org`;
 
-export const    AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [organization, setOrganization] = useState(null);
-     const fetchOrganization = async () => {
+
+    const fetchOrganization = async () => {
         try {
             const response = await axios.get(`${ORG_API_URL}/org-details`, { withCredentials: true });
             setOrganization(response.data);
@@ -18,6 +19,7 @@ export const AuthProvider = ({ children }) => {
             console.error("Error fetching organization details:", error);
         }
     };
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -35,29 +37,36 @@ export const AuthProvider = ({ children }) => {
             }
         };
 
-      
-
         fetchUser();
     }, []);
+
+    // ✅ Hàm cập nhật user sau khi chỉnh sửa hồ sơ
+    const updateUser = (updatedUserData) => {
+        setUser(prevUser => ({
+            ...prevUser,
+            ...updatedUserData // Cập nhật dữ liệu mới từ API
+        }));
+    };
+
     const updateOrganization = (updatedOrg) => {
         setOrganization(updatedOrg);
     };
+
     const login = (userData) => {
         setUser(userData);
-        if (userData.role =="Organization") {
+        if (userData.role === "Organization") {
             fetchOrganization();
         }
     };
 
     const logout = async () => {
-        const response = await axios.post(`${API_URL}/logout`, { withCredentials: true });
-
+        await axios.post(`${API_URL}/logout`, { withCredentials: true });
         setUser(null);
         setOrganization(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, organization, login, logout,updateOrganization }}>
+        <AuthContext.Provider value={{ user, setUser, loading, organization, login, logout, updateOrganization, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

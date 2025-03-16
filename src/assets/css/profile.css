@@ -1,17 +1,149 @@
+/* Tổng thể */
+body {
+    background-color: #f4f6f9;
+    font-family: 'Arial', sans-serif;
+}
 
-
-.content-edit {
+/* Khung chứa profile */
+.info-section {
     display: flex;
-    justify-content: center;
-    width: 100%;
+    flex-wrap: wrap;
+    padding: 2%;
+    width: 75%;
+    max-width: 950px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin: 30px auto;
+    overflow: hidden;
 }
-.change-password {
-    margin-top: 20px;
+
+/* Phần trái - Avatar + Thông tin cơ bản */
+.left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 35%;
+    padding: 1.5em;
+    background: linear-gradient(135deg, #007bff, #08376b);
+    color: white;
+    border-radius: 12px;
     text-align: center;
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.3);
 }
+
+.left .img-container {
+    width: 12em;
+    height: 12em;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    transition: transform 0.3s ease-in-out;
+}
+
+.left .img-container:hover {
+    transform: scale(1.1);
+}
+
+.left .img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Tên và Bio */
+.left .user-info h1 {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+.left .user-info p {
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 5px;
+    opacity: 0.9;
+}
+
+/* Phần phải - Thông tin cá nhân */
+.right {
+    width: 63%;
+    margin-left: 2%;
+    padding: 1.5em;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.right > h3 {
+    border-bottom: 3px solid #08376b;
+    font-size: 1.5em;
+    color: #08376b;
+    margin-bottom: 1em;
+}
+
+/* Danh sách thông tin */
+.all-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: rgb(22, 36, 89);
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.field label {
+    margin-bottom: 0.3em;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.field p {
+    color: rgb(87, 87, 87);
+    font-size: 1.1em;
+}
+
+/* Skills */
+.skills {
+    margin-top: 20px;
+}
+
+.skills ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    list-style: none;
+}
+
+.skills li {
+    background: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Nút chỉnh sửa */
+.change-password {
+    text-align: center;
+    margin-top: 20px;
+}
+
 .change-password-link {
     display: inline-block;
-    background-color: #007bff;  /* Blue color */
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -22,108 +154,20 @@
 }
 
 .change-password-link:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-.info-section {
-    display: flex;
-    padding: 2%;
-    width: 70%; /* Adjust width as needed */
-    max-width: 900px; /* Set a maximum width for larger screens */
-    border-radius: 10px; /* Smoother corners */
-    background-color: rgba(255, 255, 255, 0.9); /* Light background color */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Depth with shadow */
-    margin: 0 auto; /* Center the section */
+    background-color: #0056b3;
 }
 
-.left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 35%; /* Width of the left section */
-    padding: 1.5em; /* Padding for spacing */
-    background-color: #f9f9f9; /* Light background color for distinction */
-    border-radius: 10px; /* Match border radius with the outer box */
-    border: 1px solid #dcdcdc; /* Light border for the left section */
-}
-
-.left .img-container {
-    width: 12em; /* Profile image size */
-    height: 12em; /* Profile image size */
-}
-
-.left .img-container img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #08376b; /* Thicker border around profile image */
-}
-
-.left .user-info {
-    text-align: center; /* Centered user info */
-    margin-top: 1em; /* Added margin for spacing */
-}
-
-.left .user-info .name {
-    font-size: 1.5em;
-    font-weight: bold; /* Made name bold */
-    color: #08376b; /* Darker color for better contrast */
-    margin: 0.5em 0; /* Adjusted margin */
-}
-
-.right {
-    width: 65%; /* Width of the right section */
-    margin-left: 2%; /* Margin to separate from the left section */
-    padding: 1.5em; /* Padding for spacing */
-    background-color: #f9f9f9; /* Light background color for distinction */
-    border-radius: 10px; /* Match border radius with the outer box */
-    border: 1px solid #dcdcdc; /* Light border for the right section */
-}
-
-.right > h3 {
-    margin: 0;
-    border-bottom: 2px solid #08376b; /* Thicker border for header */
-    font-size: 1.5em;
-    color: #08376b;
-    margin-bottom: 1em;
-}
-
-.all-fields {
-    display: flex;
-    flex-direction: column; /* Changed to column for better alignment */
-    gap: 1.5em; /* Increased gap for spacing */
-}
-
-.field {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    color: rgb(22, 36, 89);
-}
-
-.field label {
-    margin-bottom: 0.5em; /* Spacing for labels */
-    font-weight: bold; /* Bold labels */
-}
-
-.field p {
-    border: solid 1px rgb(160, 159, 161);
-    border-radius: 4px; /* Slightly rounded corners */
-    padding: 1em; /* Adjusted padding */
-    color: rgb(107, 107, 107);
-    font-size: 1.1em;
-    background-color: rgba(240, 248, 255, 0.849);
-}
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 768px) {
     .info-section {
-        flex-direction: column; /* Stack sections on smaller screens */
-        width: 90%; /* Full width for each section */
+        flex-direction: column;
+        width: 90%;
     }
     .left, .right {
-        width: 100%; /* Full width for each section */
-        margin-left: 0; /* Remove margin */
-        margin-bottom: 1em; /* Add space between stacked sections */
+        width: 100%;
+        margin: 0;
+    }
+    .all-fields {
+        grid-template-columns: 1fr;
     }
 }
