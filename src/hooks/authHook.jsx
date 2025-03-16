@@ -36,6 +36,13 @@ export function useAuth(loginType) {
                 navigate("/role");
                 return;
             }
+            if(user.role=='Admin'){
+                navigate('/admin')
+                return
+            }
+            if(user.role=='Organization'){
+                navigate('/project')
+            }
 
             navigate("/");
         } catch (error) {

@@ -1,9 +1,10 @@
 /* Centering the login box */
 .login-container {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+ 
     background: #f0f4f8;
 }
 

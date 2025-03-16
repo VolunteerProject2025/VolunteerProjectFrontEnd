@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+
+
 body {
     background-color: rgb(255, 255, 255);
     margin: 0;
@@ -9,4 +11,101 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+/* Kiểu dáng chung cho menu */
+.app-menu.navbar-menu {
+    background-color: #fff;
+    border-right: 1px solid #e0e0e0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+/* Logo */
+.navbar-brand-box {
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Kiểu dáng chung cho menu items */
+.navbar-nav {
+    padding: 0;
+    list-style: none;
+}
+
+.nav-item {
+    margin-bottom: 10px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.nav-link i {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    background-color: #f5f5f5;
+    color: #007bff;
+}
+
+/* Khi sidebar ở chế độ thu nhỏ */
+[data-sidebar-size="sm-hover"] .app-menu.navbar-menu {
+    width: 80px;
+}
+
+[data-sidebar-size="sm-hover"] .nav-link span {
+    display: none;
+}
+
+[data-sidebar-size="sm-hover"] .logo-sm {
+    display: block;
+}
+
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+}
+
+.Adminmain {
+    flex: 1; /* Đảm bảo phần chính mở rộng */
+    padding: 20px;
+    margin-left: 250px; /* Khoảng cách với sidebar */
+
+}
+
+@media (max-width: 768px) {
+    .Adminmain {
+        margin-left: 0; /* Ẩn sidebar khi màn hình nhỏ */
+    }
+}
+
+.header.header {
+    position: relative;
+    /* margin-left: 250px; */
+}
+
+.mt-50 {
+    margin-top: 25px;
+}
+
+.des {
+    white-space: normal; /* Cho phép xuống dòng */
+    word-wrap: break-word; /* Tự động xuống dòng khi quá dài */
+    min-width: 280px; /* Giới hạn chiều rộng để kích hoạt xuống dòng */
 }
