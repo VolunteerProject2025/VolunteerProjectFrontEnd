@@ -1,0 +1,14 @@
+.project-image-container {
+    width: 100%;
+    text-align: center; /* Căn giữa hình ảnh */
+    margin-top: 20px;
+}
+
+.project-image {
+    width: 80%;  /* Ảnh không quá lớn */
+    max-width: 400px;  /* Giữ hình ảnh trong giới hạn hợp lý */
+    height: auto;  /* Giữ tỷ lệ khung hình */
+    display: block;  /* Đảm bảo ảnh xuống dòng */
+    margin: 0 auto; /* Căn giữa */
+    border-radius: 10px; /* Bo góc nhẹ */
+}

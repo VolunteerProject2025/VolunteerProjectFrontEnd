@@ -65,7 +65,6 @@ export function ProjectList() {
                     <div className="upcoming-item__details">
                       <p>
                         <svg className="icon">
-                          <use xlinkHref="#clock"></use>
                         </svg>
                         <strong>Start:</strong> {formatDate(startDate)} -
                         <strong> End:</strong> {formatDate(endDate)}

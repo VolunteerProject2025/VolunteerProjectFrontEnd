@@ -36,7 +36,7 @@ export function FeedbacksManagements() {
     };
 
     return (
-        <Table className="table text-nowrap table-borderless" style={{maxWidth: "100px"}}>
+        <Table className="table text-nowrap table-borderless" >
             <thead>
                 <tr>
                     <th scope="col">Name</th>
@@ -53,7 +53,7 @@ export function FeedbacksManagements() {
                         <tr key={index}>
                             <th>{item.user ? item.user.fullName : "N/A"}</th>
                             <th>{item.project.title}</th>
-                            <th>{item.organization.name}</th>
+                            <th>{item.organization ? item.organization.name : "N?A"}</th>
                             <td className='des'>{item.content}</td>
                             <td>{item.rating}</td>
                             <td>{formatDate(item.createdAt)}</td>

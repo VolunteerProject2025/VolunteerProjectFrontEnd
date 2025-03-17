@@ -23,19 +23,21 @@ export function ApproveOrganization() {
 
     const handleApprove = async (orgId) => {
         try {
-            // const response = await axios.put(`http://localhost:3000/api/organizations/${orgId}/approve`);
-            await approveOrgw(orgId);
-            console.log(`Approved tổ chức có ID: ${orgId}`, response.data);
-
-            // Cập nhật lại danh sách sau khi approve
-            setOrgs(orgs.map(org => 
-                org._id === orgId ? { ...org, status: "Approved" } : org
-            ));
+            await approveOrgw(orgId); // Gửi yêu cầu duyệt lên server
+    
+            // Cập nhật lại state với tổ chức đã duyệt
+            setOrgs(prevOrgs =>
+                prevOrgs.map(org =>
+                    org._id === orgId ? { ...org, status: "Approved" } : org
+                )
+            );
+    
+            console.log(`Tổ chức có ID ${orgId} đã được duyệt.`);
         } catch (error) {
             console.error("Lỗi khi duyệt tổ chức:", error);
         }
     };
-
+    
     return (
         <Table className="table text-nowrap table-borderless">
             <thead>
@@ -53,11 +55,12 @@ export function ApproveOrganization() {
                     orgs.map((org, index) => (
                         <tr key={org._id || index}>
                             <th scope="row">{org.name || "N/A"}</th>
-                            <td>{org.description || "N/A"}</td>
+                            <td className='des'>{org.description || "N/A"}</td>
                             <td>{org.contactEmail || "N/A"}</td>
                             <td>{org.address || "N/A"}</td>
                             <td>{org.phone || "N/A"}</td>
                             <td>
+                            {org.status !== "Approved" && (
                                 <Button 
                                     variant="success" 
                                     size="sm" 
@@ -65,6 +68,7 @@ export function ApproveOrganization() {
                                 >
                                     Approve
                                 </Button>
+                            )}
                             </td>
                         </tr>
                     ))

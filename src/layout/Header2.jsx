@@ -1,22 +1,22 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext"; // Import AuthContext
+import { NotificationBell } from "../pages/NotificationBell"; // Import NotificationBell component
 import '../assets/css/header.css';
 import logo from '../assets/img/volunteer_act_logo.png';
-import imgProfile from '../assets/img/user_img.png'
-const Header2 = () => {
-    const navigate = useNavigate();
+import { organizationProfile } from "../hooks/profileHook";
 
+const Header2 = () => {
+    const organization = organizationProfile();
+
+
+    const organizationId = organization?.organization?.organization?._id
     const { user, logout, loading } = useContext(AuthContext); // Access auth context
 
     if (loading) {
         return <div>Loading...</div>; // You can show a loading spinner while fetching the user
     }
-    const handleProfileClick = async () => {
-        // Navigate to Profile page
-        navigate('/profile');
-        // You can fetch user details here if needed
-    };
+
     return (
         <>
             <div className="mobile-nav">
@@ -37,7 +37,6 @@ const Header2 = () => {
             <div className="aside-dropdown">
                 <div className="aside-dropdown__inner"><span className="aside-dropdown__close">
                     <svg className="icon">
-                        <use xlink:href="#close"></use>
                     </svg></span>
                     <div className="aside-dropdown__item d-lg-none d-block">
                         <ul className="aside-menu">
@@ -126,14 +125,14 @@ const Header2 = () => {
                 <div className="container-fluid">
                     <div className="row no-gutters justify-content-between">
                         <div className="col-auto d-flex align-items-center">
-                            
-                            <div style={{marginRight: 30}} className="header-logo">
-                                <a className="header-logo__link" href="">
-                                <Link to="/" >
-                                <img className="header-logo__img" src={logo} alt="logo" />
+
+                            <div style={{ marginRight: 30 }} className="header-logo">
+
+                                <Link to="/" className="header-logo__link" href="">
+                                    <img className="header-logo__img" src={logo} alt="logo" />
 
                                 </Link>
-                                </a></div>
+                            </div>
                         </div>
                         <div className="col-auto">
                             <nav>
@@ -148,9 +147,11 @@ const Header2 = () => {
                                             <li><a href="front_3.html"><span>06 Home Monochrome</span></a></li>
                                         </ul> */}
                                     </li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span> <Link style={{color: "black", textDecoration: 'none'}} to="/post">
-Post
-                                            </Link></span></a>
+                                    <li className="main-menu__item main-menu__item--has-child">
+                                        <span> <Link className="main-menu__link" style={{ color: "black", textDecoration: 'none' }} to="/post">
+                                            Post
+                                        </Link></span>
+
                                         {/* <ul className="main-menu__sub-list sub-list--style-2">
                                             <li><a href="about.html"><span>About</span></a></li>
                                             <li><a href="typography.html"> <span>Typography</span></a></li>
@@ -171,7 +172,9 @@ Post
                                             </Link></span></li>
                                         </ul> */}
                                     </li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Causes</span></a>
+                                    <li className="main-menu__item main-menu__item--has-child">             <span> <Link className="main-menu__link" style={{ color: "black", textDecoration: 'none' }} to="/chat">
+                                        Chat
+                                    </Link></span>
                                         <ul className="main-menu__sub-list">
                                             <li><a href="causes.html"><span>Causes 1</span></a></li>
                                             <li><a href="causes_2.html"> <span>Causes 2</span></a></li>
@@ -179,13 +182,25 @@ Post
                                             <li><a href="cause-details.html"><span>Cause Details</span></a></li>
                                         </ul>
                                     </li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Shop</span></a>
+                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Projects</span></a>
                                         <ul className="main-menu__sub-list">
-                                            <li><a href="shop.html"><span>Catalog Page</span></a></li>
-                                            <li><a href="shop-product.html"><span>Shop Product</span></a></li>
-                                            <li><a href="shop-cart.html"><span>Shop Cart</span></a></li>
+
+                                            {user && user.role === "Organization" && (
+                                                <li>
+                                                    <Link style={{ color: "black" }} to={`/projects/organization/${organizationId}`}>
+                                                        <i className="fas fa-building"></i>
+                                                        My Projects
+                                                    </Link>
+                                                </li>
+                                            )}
+
+                                            <li><Link style={{ color: "black" }} to={`/project`}>
+                                                <i className="fas fa-building"></i> {/* FontAwesome Building Icon */}
+                                                Projects
+                                            </Link></li>
+                                            {/* <li><a href="shop-cart.html"><span>Shop Cart</span></a></li>
                                             <li><a href="shop-checkout.html"><span>Shop Checkout</span></a></li>
-                                            <li><a href="shop-account.html"><span>Shop Account</span></a></li>
+                                            <li><a href="shop-account.html"><span>Shop Account</span></a></li> */}
                                         </ul>
                                     </li>
                                     <li className="main-menu__item"><a className="main-menu__link" href="contacts.html"><span>Contacts</span></a></li>
@@ -216,14 +231,33 @@ Post
                                 </li>
                             </ul>
 
+                            {/* Notification Bell added here */}
+                            {user && (
+                                <div className="notification-wrapper" style={{ marginRight: "15px" }}>
+                                    <NotificationBell />
+                                </div>
+                            )}
+
                             {user ? (<>
                                 <span className="button button--squared" >
-                                    <Link style={{color: "black"}} to={user.role == "Organization" ? "/org-profile" : "/profile"}>
-                                        Welcome,   {user.fullName}!
+                                    <Link style={{ color: "black" }} to={user.role === "Organization" ? "/org-profile" : "/profile"}>
+                                        {user.role === "Organization" ? (
+                                            // Organization Icon (Buildings)
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-buildings" viewBox="0 0 16 16">
+                                                <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z" />
+                                                <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
+                                            </svg>
+                                        ) : (
+                                            // Default Profile Icon (Person Circle)
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
+                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                                <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                            </svg>
+                                        )}
                                     </Link>
                                 </span>
                                 <div className="button button--squared">
-                                    <Link style={{color: "black"}} onClick={logout}>
+                                    <Link style={{ color: "black" }} onClick={logout}>
                                         Log Out
                                     </Link>
                                 </div>
@@ -234,11 +268,11 @@ Post
 
                             ) : (<>
                                 <span className="button button--squared">
-                                    <div><Link style={{color: "black"}} to="/login" >Log In</Link></div>
+                                    <div><Link style={{ color: "black" }} to="/login" >Log In</Link></div>
 
                                 </span>
                                 <span className="button button--squared">
-                                    <div><Link style={{color: "black"}} to="/register" >Sign Up</Link></div>
+                                    <div><Link style={{ color: "black" }} to="/register" >Sign Up</Link></div>
                                 </span>
                             </>
 
