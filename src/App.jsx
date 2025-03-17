@@ -20,6 +20,8 @@ import {UpdateProject} from "./pages/UpdateProject";
 import {DeleteProject} from "./pages/DeleteProject";
 import Layout2 from './layout/Layout2'
 import { Home2 } from './pages/Home2';
+import { OrgProject } from './pages/OrgProjectlist';
+import { CreateSchedule } from './pages/ScheduleForm';
 
 function App() {
     return (
@@ -48,7 +50,9 @@ function App() {
                         <Route path="/create" element={<Layout2><CreateProject /></Layout2>} />
                         <Route path="/projects/:id" element={<Layout2><ProjectDetails /></Layout2>} />
                         <Route path="/projects/:id/edit" element={<Layout2><UpdateProject /></Layout2>} />
-                        <Route path="/delete" element={<Layout2><DeleteProject /></Layout2>} />
+                        <Route path="/projects/organization/:organizationId" element={<OrgProject />} />
+                        <Route path="/:projectId" element={<CreateSchedule />} />
+                        <Route path="/projects/:id" element={<Layout2><DeleteProject /></Layout2>} />
                         <Route path='/profile' element={
                             <PrivateRoute allowedRoles={['Volunteer', 'Admin']}>
                                 <Layout2><Profile /></Layout2>

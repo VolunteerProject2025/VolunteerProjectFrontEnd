@@ -4,8 +4,16 @@ import { AuthContext } from "../context/AuthContext"; // Import AuthContext
 import '../assets/css/header.css';
 import logo from '../assets/home/img/logo_mono.png';
 import imgProfile from '../assets/img/user_img.png'
+import { organizationProfile } from "../hooks/profileHook";
 const Header2 = () => {
     const navigate = useNavigate();
+    const organization = organizationProfile();
+    
+
+const organizationId = organization?.organization?.organization?._id;
+
+
+    
 
     const { user, logout, loading } = useContext(AuthContext); // Access auth context
 
@@ -106,7 +114,7 @@ const Header2 = () => {
                             <li className="aside-menu__item"><a className="aside-menu__link" href="#">Documents</a></li>
                             <li className="aside-menu__item"><a className="aside-menu__link" href="#">Information</a></li>
                             <li className="aside-menu__item"><a className="aside-menu__link" href="#">Additional Pages</a></li>
-                            <li className="aside-menu__item"><a className="aside-menu__link" href="#">Elements</a></li>
+                            <li className="aside-menu__item"><a className="aside-menu__link" href="/project">Project</a></li>
                             <li className="aside-menu__item"><a className="aside-menu__link" href="#">Contacts</a></li>
                         </ul>
                         <div className="aside-inner"><span className="aside-inner__title">Email</span><a className="aside-inner__link" href="mailto:support@helpo.org">support@helpo.org</a></div>
@@ -176,7 +184,10 @@ const Header2 = () => {
                                             <li><a href="cause-details.html"><span>Cause Details</span></a></li>
                                         </ul>
                                     </li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Shop</span></a>
+                                    <li className="main-menu__item main-menu__item--has-child">
+                                    <a className="main-menu__link" href={`/#/projects/organization/${organizationId}`}>
+                                    <span>My Project</span>
+                                        </a>
                                         <ul className="main-menu__sub-list">
                                             <li><a href="shop.html"><span>Catalog Page</span></a></li>
                                             <li><a href="shop-product.html"><span>Shop Product</span></a></li>
@@ -186,7 +197,7 @@ const Header2 = () => {
                                         </ul>
                                     </li>
                                     <li className="main-menu__item"><a className="main-menu__link" href="contacts.html"><span>Contacts</span></a></li>
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="#"><span>Elements</span></a>
+                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link" href="/#/project"><span>Project</span></a>
                                         <ul className="main-menu__sub-list">
                                             <li><a href="alerts.html"><span>Alerts</span></a></li>
                                             <li><a href="team.html"><span>Team</span></a></li>

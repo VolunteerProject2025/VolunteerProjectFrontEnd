@@ -12,7 +12,8 @@ export function userProfile() {
 }
 
 export function organizationProfile() {
-   const { organization } = useContext(AuthContext); // Access the organization from Auth
+   const  {organization}  = useContext(AuthContext); // Access the organization from Auth
+   console.log("🔍 Hook Debug - useOrganizationProfile:", organization);
 
-    return { organization }; // Return the function so it can be used elsewhere
+    return  {organization} ; // Return the function so it can be used elsewhere
 }

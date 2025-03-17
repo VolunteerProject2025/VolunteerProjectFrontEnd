@@ -11,7 +11,7 @@ export function OrgProfile() {
         <section className="info-section">
             <div className="left">
                 <div className="img-container">
-                    <img src={organization.img_profile || imgProfile} alt="User Profile" />
+                    {/* <img src={organization.img_profile || imgProfile} alt="User Profile" /> */}
                 </div>
 
                 <div className="user-info">

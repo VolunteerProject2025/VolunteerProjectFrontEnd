@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
-const ORG_API_URL = `${import.meta.env.VITE_API_URL}/org`;
+const ORG_API_URL = `${import.meta.env.VITE_API_URL}/organizations`;
 
 export const AuthContext = createContext();
 
@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
     const fetchOrganization = async () => {
         try {
             const response = await axios.get(`${ORG_API_URL}/org-details`, { withCredentials: true });
+            console.log(response);
+            
             setOrganization(response.data);
         } catch (error) {
             console.error("Error fetching organization details:", error);

@@ -6,6 +6,7 @@ const API_URL = `${import.meta.env.VITE_API_URL}/projects`; // Adjust this based
 export const fetchProjects = async () => {
     try {
         const response = await axios.get(API_URL, { withCredentials: true });
+        console.log(response);
         return response.data; // Returns the list of projects
     } catch (error) {
         console.error("Error fetching projects:", error);
@@ -22,4 +23,11 @@ export const deleteProject = async (projectId) => {
         console.error("Error deleting project:", error);
         throw error;
     }
+};
+
+export const getProjectsByOrgId = async (organizationId) => {
+    const response = await axios.get(`${API_URL}/organization/${organizationId}`);
+    console.log(response.data);
+    
+    return response;
 };
