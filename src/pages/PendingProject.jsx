@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getAllProjects, approveProject } from '../hooks/projectService';
+import { getPendingProjects, approveProject, rejectProject } from '../hooks/projectService';
 import { Button, Table } from 'react-bootstrap';
 import '../assets/css/body.css';
 
-export function ProjectsManagements() {
+export function PendingProjects() {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -12,7 +12,7 @@ export function ProjectsManagements() {
 
     const loadItem = async () => {
         try {
-            const result = await getAllProjects();
+            const result = await getPendingProjects();
             console.log('Dữ liệu nhận được từ API:', result.data); // Kiểm tra dữ liệu
             setItems(Array.isArray(result.data) ? result.data : []);
         } catch (error) {
@@ -35,8 +35,32 @@ export function ProjectsManagements() {
         });
     };
 
+    const handleApprove = async (id) => {
+        try {
+            await approveProject(id);
+
+            setItems(prevItems => prevItems.filter(item => item._id !== id));
+
+            await getPendingProjects()
+
+        } catch (error) {
+            console.error("Lỗi roi: ", error);
+        }
+    };
+
+    const handleReject = async (id) => {
+        try {
+            await rejectProject(id);
+
+            setItems(prevItems => prevItems.filter(item => item._id !== id));
+
+        } catch (error) {
+            console.error("Lỗi roi: ", error);
+        }
+    };
+
     return (
-        <Table className="table text-nowrap table-borderless" >
+        <Table className="table text-nowrap table-borderless" style={{maxWidth: "100px"}}>
             <thead>
                 <tr>
                     <th scope="col">Organization Name</th>
@@ -44,6 +68,7 @@ export function ProjectsManagements() {
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,6 +80,29 @@ export function ProjectsManagements() {
                             <td>{formatDate(item.startDate)}</td>
                             <td>{formatDate(item.endDate)}</td>
                             <td><span className="badge bg-danger">{item.status}</span></td>
+                            <td>
+                                {item.status !== "Approved" && (
+                                    <Button 
+                                        variant="success"
+size="sm" 
+                                        onClick={() => handleApprove(item._id)}
+                                    >
+                                        Approve
+                                    </Button>
+                                )}
+                            </td>
+
+                            <td>
+                                {item.status !== "Rejected" && (
+                                    <Button 
+                                        variant="warning" 
+                                        size="sm" 
+                                        onClick={() => handleReject(item._id)}
+                                    >
+                                        Reject
+                                    </Button>
+                                )}
+                            </td>
                         </tr>
                     ))
                 ) : (

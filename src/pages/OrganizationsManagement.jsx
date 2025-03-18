@@ -19,7 +19,7 @@ export function OrganizationsManagement() {
 
     return (
         <>
-            <Table className="table text-nowrap table-borderless">
+            <Table className="table text-nowrap table-borderless" >
                 <thead>
                     <tr>
                         <th scope="col">Organization Name</th>
@@ -34,7 +34,7 @@ export function OrganizationsManagement() {
                     {orgs.map(org => (
                         <tr>
                             <th scope="row">{org.name}</th>
-                            <td>{org.description}</td>
+                            <td  className='des'>{org.description}</td>
                             <td>{org.contactEmail}</td>
                             <td>{org.address}</td>
                             <td>{org.phone}</td>

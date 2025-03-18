@@ -3,7 +3,7 @@ import { useProfile } from "../hooks/profileHook";
 import imgProfile from "../assets/img/user_img.png";
 import { Link } from "react-router-dom";
 import {
-    Container, Card, CardContent, Avatar, Typography, Grid, Button, Chip, Divider, Box
+    Container, Card, Avatar, Typography, Grid, Button, Chip, Divider, Box
 } from "@mui/material";
 import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake, FaTransgender } from "react-icons/fa";
 import { format } from "date-fns";

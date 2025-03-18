@@ -21,3 +21,13 @@ export const updatePost = (id, post) => {
 export const deletePost = (id) => {
     return axios.delete(`${API_URL}/${id}`);
 };
+
+// Like a post
+export const likePost = async (id, data) => {
+    return await axios.post(`${API_URL}/${id}/like`, data);
+};
+
+// Add a comment
+export const addComment = async (id, data) => {
+    return await axios.post(`${API_URL}/${id}/comment`, data);
+};

@@ -1,40 +1,56 @@
-import { useState } from "react";
 import { useForgotPassword } from "../hooks/authHook";
-import '../assets/css/login.css';
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-export function ForgotPassword  (){
-    const [email, setEmail] = useState("");
+export function ForgotPassword() {
     const handleForgotPassword = useForgotPassword();
+    const [email, setEmail] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handleForgotPassword(email);
+        try {
+            await handleForgotPassword(email);
+        } catch (error) {
+            console.error("Forgot Password Error:", error);
+        }
     };
 
     return (
-        <div className="login-container">
-            <div className="login-box">
-                <h1 className="welcome-text">Change Password</h1>
-
-                <form onSubmit={handleSubmit}>
-                <div className="field-box">
-                        <label htmlFor="password">Your Email to Change Password</label>
-                        <input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-2 border rounded mb-4"
-                        required
-                    />
+        <section className="section">
+            <div className="container">
+                <div className="row offset-margin">
+                    <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-4 margin-bottom">
                     </div>
-                   
-                    <button type="submit" className="login-btn">
-                        Send Reset Link
-                    </button>
-                </form>
+                    <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-4 margin-bottom">
+                        <form className="form account-form" onSubmit={handleSubmit}>
+                            <div className="form__fieldset">
+                                <h6 className="form__title">Forgot Password</h6>
+                                <div className="row">
+                                    <div className="col-12">
+                                        <input
+                                            className="form__field"
+                                            type="email"
+                                            name="email"
+                                            placeholder="Enter your email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-12 text-center">
+                                        <button className="form__submit" type="submit">Send Reset Link</button>
+                                    </div>
+                                    <div className="col-12 text-center">
+                                        <Link className="form__link" to="/login">Back to Login</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-4 margin-bottom">
+                    </div>
+                </div>
             </div>
-        </div>
-        
+        </section>
     );
-};
+}

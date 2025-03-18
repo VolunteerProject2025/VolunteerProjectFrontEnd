@@ -1,5 +1,6 @@
 import { AuthContext } from '../context/AuthContext';
-import { useState, useEffect, useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+const API_URL = `${import.meta.env.VITE_API_URL}/volunteers`;
 
 export function useProfile() {
     const { user } = useContext(AuthContext);
@@ -15,12 +16,13 @@ export function useProfile() {
 
         const fetchVolunteerProfile = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/volunteers/me`, {
+                const response = await fetch(`${API_URL}/me`, {
                     credentials: "include",
                 });
 
                 if (!response.ok) {
-                    throw new Error("Failed to fetch volunteer profile");
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `Failed to fetch volunteer profile: ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -63,7 +65,7 @@ export function useProfile() {
 
 export async function updateProfile(updatedData) {
     try {
-        const response = await fetch("http://localhost:3000/volunteers/me", {
+        const response = await fetch(`${API_URL}/me`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -71,7 +73,7 @@ export async function updateProfile(updatedData) {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
+            const errorData = await response.json().catch(() => ({}));
             throw new Error(errorData.message || "Failed to update profile");
         }
 
@@ -83,6 +85,17 @@ export async function updateProfile(updatedData) {
 }
 
 export function organizationProfile() {
-    const { organization } = useContext(AuthContext);
-    return { organization };
+    const { organization, lastUpdated, refreshData } = useContext(AuthContext);
+    const [orgData, setOrgData] = useState({ organization });
+    
+    // Update organization data when organization or lastUpdated changes
+    useEffect(() => {
+        setOrgData({ organization });
+    }, [organization, lastUpdated]);    
+    
+    // Return both the data and the refresh function
+    return {
+        ...orgData,
+        refreshOrgData: refreshData
+    };
 }

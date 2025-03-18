@@ -34,7 +34,10 @@ const Slidebar = () => {
                                 <a href="/#/admin/feedbacks" className="nav-link menu-link"> <span data-key="t-reviews-ratings">Reviews & Ratings</span></a>
                             </li>
                             <li className="nav-item">
-                                <a href="/#/admin/pendingOrg" className="nav-link menu-link"> <span data-key="t-reviews-ratings">Approve Organization</span></a>
+                                <a href="/#/admin/pendingOrg" className="nav-link menu-link"> <span data-key="t-reviews-ratings">Pending Organization</span></a>
+                            </li>
+                            <li className="nav-item">
+                                <a href="/#/admin/pendingProjects" className="nav-link menu-link"> <span data-key="t-reviews-ratings">Pending Projects</span></a>
                             </li>
                         </ul>
                     </div>
