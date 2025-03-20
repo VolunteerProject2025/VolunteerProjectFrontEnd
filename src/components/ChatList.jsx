@@ -11,9 +11,8 @@ const getInitials = (name) => {
 // Modified ChatItem to handle group chats
 const ChatItem = ({ chat, user, onClick }) => {
     const { recipientUser } = useFetchRecipientUser(chat, user);
-    const { onlineUsers } = useContext(ChatContext);
+    const { onlineUsers} = useContext(ChatContext);
     const [lastMessage, setLastMessage] = useState(null);
-    
     // Determine if this is a group chat
     const isGroupChat = chat.isGroupChat || false;
     
@@ -175,7 +174,8 @@ const ChatList = () => {
         searchUsers,
         userChats,
         isUserChatLoading,
-        updateCurrentChat
+        updateCurrentChat,
+        createGroupChat
     } = useContext(ChatContext);
 
     const [searchTerm, setSearchTerm] = useState("");
@@ -185,7 +185,7 @@ const ChatList = () => {
     const [isGroupMode, setIsGroupMode] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [groupName, setGroupName] = useState("");
-
+    
     // Handle search input changes
     const handleSearch = async (e) => {
         const term = e.target.value;
@@ -231,43 +231,50 @@ const ChatList = () => {
     };
 
     // Create a new group chat with selected users
-    const createGroupChat = async () => {
+    const createGrChat = async () => {
         if (selectedUsers.length < 2 || !groupName.trim()) {
-            alert("Please select at least 2 users and provide a group name");
-            return;
+          alert("Please select at least 2 users and provide a group name");
+          return;
         }
-
+      
         try {
-            // You'll need to implement this API endpoint in your backend
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/chat/group`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    name: groupName,
-                    members: [...selectedUsers.map(u => u._id), user._id], // Include current user as well
-                }),
-            });
-
-            if (response.ok) {
-                const newChat = await response.json();
-                // Reset group creation state
-                setIsGroupMode(false);
-                setSelectedUsers([]);
-                setGroupName("");
-                // You might want to refresh user chats or navigate to the new group
-                // updateUserChats(); // If you have a function to refresh chats
-                alert("Group created successfully!");
-            } else {
-                alert("Failed to create group");
+          // Get the member IDs
+          const memberIds = selectedUsers.map(u => {
+            // Handle both regular users and existing chat members
+            if (u.isGroup) {
+              return null; // Skip groups, we don't want to add groups to groups
             }
+            return u._id;
+          }).filter(id => id !== null); // Remove any nulls
+          
+          // Add current user's ID if not already included
+          if (!memberIds.includes(user._id)) {
+            memberIds.push(user._id);
+          }
+          
+          console.log("Creating group with members:", memberIds);
+          
+          // Use the createGroupChat function from ChatContext
+          const newChat = await createGroupChat(groupName, memberIds);
+          
+          if (newChat) {
+            // Reset group creation state
+            setIsGroupMode(false);
+            setSelectedUsers([]);
+            setGroupName("");
+            
+            // Automatically select the new group chat
+            updateCurrentChat(newChat);
+            
+            alert("Group created successfully!");
+          } else {
+            alert("Failed to create group");
+          }
         } catch (error) {
-            console.error("Error creating group:", error);
-            alert("An error occurred while creating the group");
+          console.error("Error creating group:", error);
+          alert("An error occurred while creating the group");
         }
-    };
+      };
 
     // Cancel group creation mode
     const cancelGroupCreation = () => {
@@ -303,7 +310,7 @@ const ChatList = () => {
                             </button>
                             <button 
                                 className="btn btn-primary btn-sm" 
-                                onClick={createGroupChat}
+                                onClick={createGrChat}
                                 disabled={selectedUsers.length < 2 || !groupName.trim()}
                             >
                                 Create Group ({selectedUsers.length} selected)

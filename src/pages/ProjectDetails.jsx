@@ -31,8 +31,13 @@ export function ProjectDetails() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [show, setShow] = useState(false);
-  const { volunteers, setVolunteers  } = useContext(ProjectContext);
+  const { volunteers, setVolunteers } = useContext(ProjectContext);
   const volunteersList = volunteers[id] || [];
+
+  // New states for join project modal
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [joinMessage, setJoinMessage] = useState("");
+
   useEffect(() => {
     // Fetch Project Details
     fetch(`http://localhost:3000/projects/${id}`)
@@ -79,14 +84,22 @@ export function ProjectDetails() {
     }
   }, [id, currentPage, user]);
 
-  const handleJoinProject = () => {
+  // Modified to open the modal instead of directly joining
+  const handleJoinClick = () => {
+    setShowJoinModal(true);
+  };
+
+  // New function to handle actual join project submission
+  const handleSubmitJoinRequest = () => {
     console.log("Joining project with ID:", id);
     console.log("User email:", user?.email);
+    console.log("Join message:", joinMessage);
 
     fetch(`http://localhost:3000/projects/${id}/join`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
+      body: JSON.stringify({ message: joinMessage }),
     })
       .then(async (res) => {
         if (!res.ok) {
@@ -96,10 +109,12 @@ export function ProjectDetails() {
         return res.json();
       })
       .then(() => {
+        setShowJoinModal(false);
         alert("Join request sent. Waiting for approval.");
         setParticipationStatus("Pending");
       })
       .catch((error) => {
+        setShowJoinModal(false);
         alert(error.message);
       });
   };
@@ -111,18 +126,18 @@ export function ProjectDetails() {
     }
   };
   const handleShow = () => {
-    setShow(true); 
+    setShow(true);
   };
 
   const handleReject = async (volunteerId, projectId) => {
     try {
       await rejectVolunteerToProject(volunteerId, projectId);
-      
+
       setVolunteers((prev) => ({
         ...prev,
         [projectId]: prev[projectId].filter((v) => v.volunteer._id !== volunteerId),
       }));
-      
+
     } catch (error) {
       console.log(error);
     }
@@ -131,7 +146,7 @@ export function ProjectDetails() {
   const handleApprove = async (volunteerId, projectId) => {
     try {
       await approveVolunteerToProject(volunteerId, projectId);
-      
+
       setVolunteers((prev) => ({
         ...prev,
         [projectId]: prev[projectId].filter((v) => v.volunteer._id !== volunteerId),
@@ -288,7 +303,7 @@ export function ProjectDetails() {
             </>
           ) : user?.role === "Volunteer" ? (
             <button
-              onClick={handleJoinProject}
+              onClick={handleJoinClick}
               disabled={participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected"}
               className={`project-btn ${participationStatus === "Accepted"
                 ? "btn-accepted"
@@ -314,6 +329,33 @@ export function ProjectDetails() {
           ) : null}
         </div>
 
+        {/* Join Project Modal */}
+        <Modal show={showJoinModal} onHide={() => setShowJoinModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Join Project: {project.data.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="form-group">
+              <label>Write a message to the project organizer:</label>
+              <textarea
+                className="form-control"
+                rows="5"
+                placeholder="Introduce yourself and explain why you'd like to join this project..."
+                value={joinMessage}
+                onChange={(e) => setJoinMessage(e.target.value)}
+              ></textarea>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowJoinModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={handleSubmitJoinRequest}>
+              Send Request
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <div className="project-image-container">
           {project.data.image ? (
             <img src={`http://localhost:3000${project.data.image}`} className="project-image" alt="Project" />
@@ -322,66 +364,72 @@ export function ProjectDetails() {
           )}
         </div>
         {user?.role === "Organization" && user._id === project.data.organization.user ? (
-          <div style={{marginTop: 20, display: 'grid'}}>
-          <Button variant="warning" onClick={() => handleShow()} style={{padding: 20}}>
-            Pending Volunteers
-          </Button>
+          <div style={{ marginTop: 20, display: 'grid' }}>
+            <Button variant="warning" onClick={() => handleShow()} style={{ padding: 20 }}>
+              Pending Volunteers
+            </Button>
 
-          <Modal
-            show={show}
-            onHide={() => setShow(false)}
-            size="xl"
-            dialogClassName="modal-90w"
-            aria-labelledby="example-custom-modal-styling-title"
-          >
-            <Modal.Header closeButton>
-              <Modal.Title id="example-custom-modal-styling-title">
-                Pending Voluteers List
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              {volunteersList.length > 0 ? (
+            <Modal
+              show={show}
+              onHide={() => setShow(false)}
+              size="xl"
+              dialogClassName="modal-90w"
+              aria-labelledby="example-custom-modal-styling-title"
+            >
+              <Modal.Header closeButton>
+                <Modal.Title id="example-custom-modal-styling-title">
+                  Pending Voluteers List
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {volunteersList.length > 0 ? (
                   volunteersList.map((v) => (
-                      <li key={project._id} className="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 key={v.volunteer._id} className="mb-1">Fullname: {v.volunteer.fullName}</h6>
-                                <p key={`dob-${v.volunteer._id}`} className="mb-1">DOB: {new Date(v.volunteer.dateOfBirth).toLocaleDateString("vi-VN")}</p>
-                                <p key={`email-${v.volunteer._id}`} className="mb-1">Gender: {v.volunteer.gender}</p>
-                                <>
-                                  Skills: 
-                                  {v.volunteer.skills.map((skill) => (
-                                    <li style={{fontSize: 14}} key={skill._id} className="mb-1">{skill.name}</li>
-                                  ))}
-                                </>
-                            </div>
+                    <li key={project._id} className="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <h6 key={v.volunteer._id} className="mb-1">Fullname: {v.volunteer.fullName}</h6>
+                        <p key={`dob-${v.volunteer._id}`} className="mb-1">DOB: {new Date(v.volunteer.dateOfBirth).toLocaleDateString("vi-VN")}</p>
+                        <p key={`email-${v.volunteer._id}`} className="mb-1">Gender: {v.volunteer.gender}</p>
+                        <>
+                          Skills:
+                          {v.volunteer.skills.map((skill) => (
+                            <li style={{ fontSize: 14 }} key={skill._id} className="mb-1">{skill.name}</li>
+                          ))}
+                        </>
+                        {v.message && (
+                          <div>
+                            <p key={`message-${v.volunteer._id}`} className="mt-2"><strong>Message:</strong></p>
+                            <p key={`message-content-${v.volunteer._id}`} className="mb-1 fst-italic">"{v.message}"</p>
+                          </div>
+                        )}
+                      </div>
 
-                            <div>
-                              <button
-                                  className="btn btn-danger btn-sm"
-                                  onClick={() => handleReject(v.volunteer._id, v.project._id)}
-                              >
-                                  Reject
-                              </button>
+                      <div>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleReject(v.volunteer._id, v.project._id)}
+                        >
+                          Reject
+                        </button>
 
-                              <button
-                                  className="btn btn-success btn-sm"
-                                  onClick={() => handleApprove(v.volunteer._id, v.project._id)}
-                                  style={{marginLeft: 15}}
-                              >
-                                  Approve
-                              </button>
-                            </div>
-                        </li>
+                        <button
+                          className="btn btn-success btn-sm"
+                          onClick={() => handleApprove(v.volunteer._id, v.project._id)}
+                          style={{ marginLeft: 15 }}
+                        >
+                          Approve
+                        </button>
+                      </div>
+                    </li>
                   ))
-              ) : (
+                ) : (
                   <p>No pending volunteers.</p>
-              )}
-            </Modal.Body>
-          </Modal>          
-        </div>
+                )}
+              </Modal.Body>
+            </Modal>
+          </div>
 
-          ) : null }
-        
+        ) : null}
+
       </div>
 
       {/* Right column: Project schedules */}

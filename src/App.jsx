@@ -83,7 +83,6 @@ function App() {
                                         <Layout2><ChangePassword /></Layout2>
                                     </PrivateRoute>
                                 } />
-                                <Route path="/project" element={<Layout2><ProjectList /></Layout2>} />
                                 <Route path="/projects/organization/:organizationId" element={
                                     <ProjectProvider>
                                         <PrivateRoute

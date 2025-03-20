@@ -131,22 +131,21 @@ const Header2 = () => {
                                         </Link></span>
                                     </li>
 
-                                    <li className="main-menu__item main-menu__item--has-child"><a className="main-menu__link"><span>Projects</span></a>
-                                        <ul className="main-menu__sub-list">
-
-                                            {user && user.role === "Organization" && organization.organization !== null && (
+                                    <li className="main-menu__item main-menu__item--has-child">
+                                        {user && user.role === "Organization" && organization.organization !== null && (
                                                 <li>
-                                                    <Link style={{ color: "black" }} to={`/projects/organization/${organizationId}`}>
+                                                    <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/organization/${organizationId}`}>
                                                         <i className="fas fa-building"></i>
                                                         My Projects
                                                     </Link>
                                                 </li>
                                             )}
 
-                                            <li><Link style={{ color: "black" }} to={`/project`}>
-                                                <i className="fas fa-building"></i> {/* FontAwesome Building Icon */}
-                                                Projects
-                                            </Link></li>
+                                 
+                                        <ul className="main-menu__sub-list">
+
+                                           
+                                       
 
                                         </ul>
                                     </li>

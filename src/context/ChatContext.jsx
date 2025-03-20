@@ -56,13 +56,17 @@ export const ChatContextProvider = ({ children }) => {
 
     // Send message when newMessage is set
     useEffect(() => {
-        if (!socket || !newMessage || !currentChat) return;
+        if (socket === null) return;
 
-        const recipientId = currentChat.members.find(id => id !== user?._id);
-        
-        if (recipientId) {
-            socket.emit('sendMessage', { ...newMessage, recipientId });
-        }
+        const recipientId = currentChat?.members?.find(id => id !== user?._id);
+
+        socket.emit("sendMessage", {
+            ...newMessage,
+            recipientId,
+            // Add group chat info if it's a group chat
+            isGroupChat: currentChat?.isGroupChat || false,
+            members: currentChat?.members || []
+        });
     }, [newMessage, socket, currentChat, user]);
 
     // Receive message
@@ -126,7 +130,7 @@ export const ChatContextProvider = ({ children }) => {
             setUserChatsError(null);
 
             try {
-                const response = await getRequest(`${API_URL}/chat/`);
+                const response = await getRequest(`${API_URL}/chat/${user?._id}`);
 
                 setIsUserChatLoading(false);
 
@@ -207,41 +211,47 @@ export const ChatContextProvider = ({ children }) => {
 
     const sendTextMessage = useCallback(async (textMessage, sender, currentChatId, setTextMessage) => {
         if (!textMessage) {
-            return setSendTextMessageError('You must type something');
+          return setSendTextMessageError('You must type something');
         }
-
+      
         setSendTextMessageError(null);
-
+      
         try {
-            const chatIdStr = String(currentChatId);
-            const senderIdStr = String(sender._id);
+          const chatIdStr = String(currentChatId);
+          const senderIdStr = String(sender._id);
           
-            const response = await postRequest(
-                `${API_URL}/message`,
-                {
-                    chatId: chatIdStr,
-                    senderId: senderIdStr,
-                    text: textMessage
-                }
-            );
-
-            if (response.error) {
-                return setSendTextMessageError(response);
+          const response = await postRequest(
+            `${API_URL}/message`,
+            {
+              chatId: chatIdStr,
+              senderId: senderIdStr,
+              text: textMessage
             }
-
-            // Update messages locally
-            setMessages(prev => prev ? [...prev, response] : [response]);
-            
-            // Set new message for socket transmission
-            setNewMessage(response);
-            
-            // Clear input field
+          );
+      
+          if (response.error) {
+            return setSendTextMessageError(response);
+          }
+      
+          // Update messages locally
+          setMessages(prev => prev ? [...prev, response] : [response]);
+          
+          // Prepare message for socket transmission
+          const messageForSocket = {
+            ...response,
+            // Add group chat info if this is a group chat
+            isGroupChat: currentChat?.isGroupChat || false,
+            members: currentChat?.members || []
+          };
+          
+          // Set new message for socket transmission
+          setNewMessage(messageForSocket);
         } catch (error) {
-            setSendTextMessageError("Failed to send message");
-            console.error("Error sending message:", error);
+          setSendTextMessageError("Failed to send message");
+          console.error("Error sending message:", error);
         }
-    }, []);
-
+      }, [currentChat]);
+ 
     const updateCurrentChat = useCallback((chat) => {
         setCurrentChat(chat);
     }, []);
@@ -272,7 +282,59 @@ export const ChatContextProvider = ({ children }) => {
             return null;
         }
     }, []);
-
+    const createGroupChat = useCallback(async (name, members) => {
+        try {
+          // Ensure current user is included in members
+          const memberIds = [...members];
+          if (!memberIds.includes(user._id)) {
+            memberIds.push(user._id);
+          }
+      
+          const response = await postRequest(
+            `${API_URL}/chat/group`,
+            {
+              name,
+              members: memberIds
+            }
+          );
+      
+          if (response.error) {
+            console.error("Error creating group chat:", response.error);
+            return null;
+          }
+      
+          // Update userChats to include the new group chat
+          setUserChats(prev => {
+            // Check if the chat is already in the list
+            const exists = prev?.some(chat => chat._id === response._id);
+            if (exists) return prev;
+            return prev ? [...prev, response] : [response];
+          });
+          
+          // Automatically set this as the current chat
+          setCurrentChat(response);
+          
+          return response;
+        } catch (error) {
+          console.error("Error creating group chat:", error);
+          return null;
+        }
+      }, [user, API_URL]);
+      
+      // Function to fetch user details by ID (for group chat messages)
+      const fetchUserById = useCallback(async (userId) => {
+        try {
+          const response = await getRequest(`${API_URL}/users/find/${userId}`);
+          if (response.error) {
+            console.error("Error fetching user:", response.error);
+            return null;
+          }
+          return response;
+        } catch (error) {
+          console.error("Error fetching user:", error);
+          return null;
+        }
+      }, [API_URL]);
     return (
         <ChatContext.Provider
             value={{
@@ -288,7 +350,9 @@ export const ChatContextProvider = ({ children }) => {
                 currentChat,
                 sendTextMessage,
                 onlineUsers,
-                searchUsers
+                searchUsers,
+                createGroupChat,
+                fetchUserById
             }}
         >
             {children}
