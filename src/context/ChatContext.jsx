@@ -20,7 +20,8 @@ export const ChatContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const { user } = useContext(AuthContext);
-    const [notifications, setNotifications] = useState([])
+    const [notifications, setNotifications] = useState([]);
+    
     // Socket initialization - only when user changes
     useEffect(() => {
         if (!user?._id) return;
@@ -172,6 +173,38 @@ export const ChatContextProvider = ({ children }) => {
         getMessages();
     }, [currentChat]);
 
+    // Search for users
+    const searchUsers = useCallback(async (searchTerm) => {
+        if (!searchTerm || !user?._id) return [];
+
+        try {
+            const response = await getRequest(`${API_URL}/users/search?term=${searchTerm}`);
+
+            if (response.error) {
+                console.error("Error searching users:", response);
+                return [];
+            }
+
+            // Filter out current user and users with existing chats
+            return response.filter((u) => {
+                // Skip current user
+                if (user._id === u._id) return false;
+
+                // Only include users without existing chats
+                if (userChats) {
+                    const isChatCreated = userChats.some(chat => 
+                        chat.members.includes(u._id)
+                    );
+                    return !isChatCreated;
+                }
+                return true;
+            });
+        } catch (error) {
+            console.error("Error searching users:", error);
+            return [];
+        }
+    }, [user, userChats]);
+
     const sendTextMessage = useCallback(async (textMessage, sender, currentChatId, setTextMessage) => {
         if (!textMessage) {
             return setSendTextMessageError('You must type something');
@@ -254,7 +287,8 @@ export const ChatContextProvider = ({ children }) => {
                 messagesError,
                 currentChat,
                 sendTextMessage,
-                onlineUsers
+                onlineUsers,
+                searchUsers
             }}
         >
             {children}

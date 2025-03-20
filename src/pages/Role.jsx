@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import '../assets/css/login.css';
 
 import { useChooseRole } from '../hooks/authHook'
 
@@ -58,7 +57,7 @@ export function Role() {
                                         className="btn login-btn"
                                         disabled={!roleData.role}
                                     >
-                                        Register
+                                        Choose Your Role
                                     </button>
                                 </div>
                             </form>

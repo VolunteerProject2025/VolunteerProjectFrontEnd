@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
-    Container, TextField, Button, Card, CardContent, Typography, MenuItem, Box, Chip, Autocomplete
+    Container, TextField, Button, Card, CardContent, Typography, MenuItem, Box, Chip, Autocomplete,
+    Avatar, IconButton
 } from "@mui/material";
 import { useProfile } from "../hooks/profileHook";
-import { AuthContext } from "../context/AuthContext";
 import { format, parseISO } from "date-fns";
 
 export function ProfileEdit() {
     const { isAuthenticated, isLoading, error, userProfile } = useProfile();
-    const { updateUser } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    //State lưu dữ liệu form
+    // State for form data
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -25,9 +24,13 @@ export function ProfileEdit() {
         skills: []
     });
 
+    // State for image upload
+    const [profileImage, setProfileImage] = useState(null);
+    const [currentImage, setCurrentImage] = useState("");
+    const [imagePreview, setImagePreview] = useState(null);
     const [skillsList, setSkillsList] = useState([]);
 
-    //Fetch danh sách kỹ năng từ backend khi component mount
+    // Fetch skills list from backend
     useEffect(() => {
         fetch("http://localhost:3000/skills")
             .then(res => res.json())
@@ -35,6 +38,7 @@ export function ProfileEdit() {
             .catch(err => console.error("❌ Error fetching skills:", err));
     }, []);
 
+    // Set initial form data from user profile
     useEffect(() => {
         if (userProfile) {
             setFormData({
@@ -47,40 +51,77 @@ export function ProfileEdit() {
                 bio: userProfile.bio || "",
                 skills: userProfile.skills || []
             });
+            
+            // Set current profile image if available
+            if (userProfile.profileImage) {
+                setCurrentImage(userProfile.profileImage);
+            }
         }
     }, [userProfile]);
 
-    // Xử lý thay đổi trong form
+    // Handle form field changes
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Xử lý thay đổi danh sách kỹ năng
+    // Handle skills selection changes
     const handleSkillChange = (event, newValue) => {
         setFormData({ ...formData, skills: newValue });
     };
 
-    // Xử lý submit form
+    // Handle image file selection
+    const handleImageChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setProfileImage(file);
+            
+            // Create a preview of the selected image
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         try {
+            // Create FormData object to handle file upload
+            const formDataToSend = new FormData();
+            
+            // Add all form fields to FormData
+            Object.keys(formData).forEach(key => {
+                if (key === 'skills') {
+                    // For skills array, stringify it to preserve the object structure
+                    formDataToSend.append('skills', JSON.stringify(formData.skills));
+                } else if (key === 'dateOfBirth' && formData[key]) {
+                    // Format date properly
+                    formDataToSend.append(key, format(parseISO(formData[key]), "yyyy-MM-dd"));
+                } else if (formData[key] !== null && formData[key] !== undefined) {
+                    formDataToSend.append(key, formData[key]);
+                }
+            });
+            
+            // Add profile image if selected
+            if (profileImage) {
+                formDataToSend.append('profileImage', profileImage);
+            }
+            
+            // Send the update request
             const response = await fetch("http://localhost:3000/volunteers/me", {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...formData,
-                    dateOfBirth: formData.dateOfBirth ? format(parseISO(formData.dateOfBirth), "yyyy-MM-dd") : "",
-                }),
+                body: formDataToSend,
                 credentials: "include",
+                // Don't set Content-Type header when using FormData
             });
     
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || "Failed to update profile.");
             }
-    
-            const updatedProfile = await response.json();
-            updateUser({ fullName: updatedProfile.volunteer.fullName });
     
             Swal.fire({
                 title: "Success!",
@@ -108,6 +149,34 @@ export function ProfileEdit() {
                     <Typography variant="h5" fontWeight="bold" gutterBottom>
                         Edit Profile
                     </Typography>
+                    
+                    {/* Profile Image Section */}
+                    <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
+                        <Avatar 
+                            src={imagePreview || currentImage || "/default-avatar.png"} 
+                            sx={{ width: 100, height: 100, mb: 2 }}
+                            alt={formData.fullName}
+                        />
+                        <Box>
+                            <input
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                id="profile-image-upload"
+                                type="file"
+                                onChange={handleImageChange}
+                            />
+                            <label htmlFor="profile-image-upload">
+                                <Button
+                                    variant="contained"
+                                    component="span"
+                                    size="small"
+                                >
+                                    Change Photo
+                                </Button>
+                            </label>
+                        </Box>
+                    </Box>
+                    
                     <form onSubmit={handleSubmit}>
                         <TextField label="Full Name" name="fullName" fullWidth margin="normal" value={formData.fullName} onChange={handleChange} required />
                         <TextField label="Email" name="email" fullWidth margin="normal" value={formData.email} onChange={handleChange} disabled />
@@ -123,7 +192,7 @@ export function ProfileEdit() {
                             name="dateOfBirth"
                             fullWidth
                             margin="normal"
-                            value={formData.dateOfBirth ? format(parseISO(formData.dateOfBirth), "yyyy-MM-dd") : ""}
+                            value={formData.dateOfBirth || ""}
                             onChange={handleChange}
                             InputLabelProps={{ shrink: true }}
                         />

@@ -7,7 +7,6 @@ const PrivateRoute = ({ children, allowedRoles, requireApprovedOrg = false }) =>
 
     // Log the entire context to see what's available
     
-
     // If context is not available at all
    
 
@@ -20,13 +19,13 @@ const PrivateRoute = ({ children, allowedRoles, requireApprovedOrg = false }) =>
         return <div>Loading...</div>;
     }
 
-    if (!user) {
+    if (!user ) {
         return <Navigate to="/login" />;
     }
-
+   
     // Role validation
-    const normalizedRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-    const isRoleAllowed = !allowedRoles?.length || allowedRoles.includes(normalizedRole);
+ 
+    const isRoleAllowed = !allowedRoles?.length || allowedRoles.includes(user.role);
 
     // Organization status validation
     const isOrganizationApproved = !requireApprovedOrg || 
@@ -34,7 +33,7 @@ const PrivateRoute = ({ children, allowedRoles, requireApprovedOrg = false }) =>
 
   
 
-    if (!isRoleAllowed || !isOrganizationApproved) {
+    if (!isRoleAllowed || !isOrganizationApproved || user.status!=='Active') {
         console.warn('Access Denied - Redirecting to Unauthorized');
         return <Navigate to="/unauthorized" />;
     }

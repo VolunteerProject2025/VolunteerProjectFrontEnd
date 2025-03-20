@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext  } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProjectsByOrgId } from "../hooks/projectService";
+import { getPendingVolunteers } from '../hooks/projectService';
+import { ProjectContext } from "../context/ProjectContext";
 
 export function OrgProjectList() {
     const { organizationId } = useParams();
     console.log("Organization ID from URL:", organizationId);
+    const { setVolunteers } = useContext(ProjectContext);
     const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -30,7 +33,18 @@ export function OrgProjectList() {
         }
     };
 
-    const handleViewDetails = (id) => {
+    const handleViewDetails = async (id) => {
+        try {
+            const volunteers = await getPendingVolunteers(id);
+            if (volunteers && volunteers.data) {
+                const volunteerList = Array.isArray(volunteers.data) ? volunteers.data : [];
+                setVolunteers((prev) => ({ ...prev, [id]: volunteers.data }));
+                console.log(volunteerList);
+            }
+        } catch (err) {
+            setVolunteers((prev) => ({ ...prev, [id]: [] }));
+        }
+        
         navigate(`/projects/${id}`);
     };
     const handleCreateProject = () => {
@@ -58,7 +72,7 @@ export function OrgProjectList() {
                         <li key={project._id} className="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 className="mb-1">{project.title}</h6>
-                                <p className="mb-1">{project.description}</p>
+<p className="mb-1">{project.description}</p>
                                 <small className="text-muted">Category: {project.categories || "No Category"}</small>
                             </div>
                             <button

@@ -8,50 +8,8 @@ export function Home2() {
         <div>
 <section className="promo">
 					<div className="promo-slider">
-						<div className="promo-slider__item promo-slider__item--style-1">
-							<picture>
-								<source srcSet={promo_1} media="(min-width: 992px)"/><img className="img--bg" src={promo_1} alt="img"/>
-							</picture>
-							<div className="container">
-								<div className="row">
-									<div className="col-12">
-										<div className="align-container">
-											<div className="align-container__item">
-												<div className="promo-slider__wrapper-1">
-													<h2 className="promo-slider__title"><span>Some people need help and we give it!</span></h2>
-												</div>
-												<div className="promo-slider__wrapper-2">
-													<p className="promo-slider__subtitle">Gray eel-catfish longnose whiptail catfish smalleye squaretail queen danio unicorn fish shortnose greeneye fusilier fish silver carp nibbler sharksucker tench lookdown catfish</p>
-												</div>
-												<div className="promo-slider__wrapper-3"><a className="button promo-slider__button button--primary" href="#">Discover</a></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div className="promo-slider__item promo-slider__item--style-2">
-							<picture>
-								<source srcSet={promo_2} media="(min-width: 992px)"/><img className="img--bg" src={promo_2} alt="img"/>
-							</picture>
-							<div className="container">
-								<div className="row">
-									<div className="col-lg-8 col-xl-7">
-										<div className="align-container">
-											<div className="align-container__item">
-												<div className="promo-slider__wrapper-1">
-													<h2 className="promo-slider__title"><span>Our Helping</span><br/><span>around the world.</span></h2>
-												</div>
-												<div className="promo-slider__wrapper-2">
-													<p className="promo-slider__subtitle">Gray eel-catfish longnose whiptail catfish smalleye squaretail queen danio unicorn fish shortnose greeneye fusilier fish silver carp nibbler sharksucker tench lookdown catfish</p>
-												</div>
-												<div className="promo-slider__wrapper-3"><a className="button promo-slider__button button--primary" href="#">Discover</a></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						
+						
 						<div className="promo-slider__item promo-slider__item--style-3">
 							<picture>
 								<source srcSet={promo_3} media="(min-width: 992px)"/><img className="img--bg" src={promo_3} alt="img"/>

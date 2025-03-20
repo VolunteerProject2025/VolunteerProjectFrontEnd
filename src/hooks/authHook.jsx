@@ -1,4 +1,5 @@
 import { useGoogleLogin } from "@react-oauth/google";
+
 import { useNavigate } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
 import Swal from "sweetalert2";
@@ -8,6 +9,7 @@ import { AuthContext } from '../context/AuthContext';
 const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 // 🔹 Authentication Hook (Login)
+// In your authHook.jsx
 export function useAuth(loginType) {
     const { login } = useContext(AuthContext); // Access the login function from context
     const navigate = useNavigate();
@@ -29,19 +31,25 @@ export function useAuth(loginType) {
             });
 
             const user = response.data.user;
+            
             login(user); // Update global auth state
              // Get user data from login response
-            if(user.role==null){
+             const organization = response.data.organization;
+             console.log('User:', user);
+             console.log('Organization:', organization);
+            if(user.role=='Guest'){
                 navigate("/role");
+                return;
+            }
+            if(user.role=='Organization' && organization===null){
+                navigate("/create-organization");
                 return;
             }
             if(user.role=='Admin'){
                 navigate('/admin')
                 return
             }
-            if(user.role=='Organization'){
-                navigate('/project')
-            }
+           
 
             navigate("/");
         } catch (error) {
@@ -65,6 +73,7 @@ export function useAuth(loginType) {
 }
 
 
+
 // 🔹 Logout Hook
 export function useLogout() {
     const { logout } = useContext(AuthContext); // Access logout from context
@@ -72,15 +81,8 @@ export function useLogout() {
 
     const handleLogOut = async () => {
         try {
-            await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
             logout(); // Clear global state
-            Swal.fire({
-                title: "Logged out!",
-                text: "You have been successfully logged out.",
-                icon: "success",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "OK",
-            });
+           
             navigate("/login");
         } catch (error) {
             console.error("Logout failed:", error);
@@ -92,7 +94,6 @@ export function useLogout() {
 
 // 🔹 Registration Hook
 export function useRegister() {
-
     const handleRegister = async (userData) => {
         try {
             await axios.post(`${API_URL}/register`, userData, {
@@ -168,34 +169,6 @@ export function useChooseRole() {
 
     return handleChooseRole;
 }
-
-export function useAuthStatus() {
-    const [userName, setUserName] = useState("");
-    const [userImg, setUserImg] = useState("");
-
-    useEffect(() => {
-        // Fetch the current user using the /me endpoint to check authentication status
-        const fetchUserStatus = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/me`, {
-                    withCredentials: true,  // Ensure cookies are sent with request
-                });
-                const user = response.data.user;
-                if (user) {
-                    setUserName(user.fullName);
-                    setUserImg(user.img_profile)
-                }
-            } catch (error) {
-                console.error("Failed to fetch user:", error);
-            }
-        };
-
-        fetchUserStatus();
-    }, []);  // This will run only once, on component mount
-
-    return { userName ,userImg};
-}
-
 export function useChangePassword() {
     const handleChangePassword = async (oldPassword, newPassword,confirmPassword) => {
         try {

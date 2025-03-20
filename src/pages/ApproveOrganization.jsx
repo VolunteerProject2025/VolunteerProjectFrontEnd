@@ -25,12 +25,7 @@ export function ApproveOrganization() {
         try {
             await approveOrgw(orgId); // Gửi yêu cầu duyệt lên server
     
-            // Cập nhật lại state với tổ chức đã duyệt
-            setOrgs(prevOrgs =>
-                prevOrgs.map(org =>
-                    org._id === orgId ? { ...org, status: "Approved" } : org
-                )
-            );
+            setOrgs(prevOrgs => prevOrgs.filter(org => org._id !== orgId));
     
             console.log(`Tổ chức có ID ${orgId} đã được duyệt.`);
         } catch (error) {

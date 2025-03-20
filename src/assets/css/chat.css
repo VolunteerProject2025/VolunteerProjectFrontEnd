@@ -206,3 +206,43 @@
     background-color: #006fde;
     transform: scale(1.1);
 }
+/* Add these styles to your chat.css file */
+
+.search-container {
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 15px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6c757d;
+    box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.25);
+}
+
+.searching-message {
+    text-align: center;
+    color: #6c757d;
+    padding: 10px;
+    font-style: italic;
+}
+
+.no-results {
+    text-align: center;
+    color: #6c757d;
+    padding: 15px;
+    font-style: italic;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 10px;
+}

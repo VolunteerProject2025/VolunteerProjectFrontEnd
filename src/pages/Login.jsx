@@ -1,6 +1,7 @@
 import { useAuth } from '../hooks/authHook';
 import { useState } from 'react';
 import { Link } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 export function Login() {
     const googleLogin = useAuth('google'); // Google login
@@ -74,8 +75,18 @@ export function Login() {
                                     </div>
                                     <div className="col-12 text-center">
                                         <span>Or login with</span>
-                                        <button onClick={googleLogin} className="btn-google">
-                                            <i className="fab fa-google"></i> Google
+                                        
+                                    </div>
+                                    <div className="col-12 text-center">
+                                        <button onClick={googleLogin} className="btn-google" type="button" style={{
+                                            borderRadius: '50px',
+                                            padding: '10px 20px',
+                                            backgroundColor: '#ffffff',
+                                            border: '1px solid #dadce0',
+                                            color: '#3c4043',
+                                            fontWeight: '500'
+                                        }}>
+                                            <FcGoogle size={24} style={{ marginRight: '8px' }} /> Google
                                         </button>
                                     </div>
                                 </div>

@@ -26,7 +26,6 @@ export function useProfile() {
                 }
 
                 const data = await response.json();
-
                 // ✅ Gán dữ liệu từ API vào state
                 setVolunteerData({
                     fullName: data.fullName || user?.fullName || '',
@@ -41,7 +40,8 @@ export function useProfile() {
                     location: data.location || '',
                     willingToTravel: data.willingToTravel || false,
                     bio: data.bio || '',
-                    img_profile: user?.img_profile || data.img_profile || null,
+                    img_profile: data?.user?.img_profile || data.img_profile || null,
+                    role: data?.user?.role || null
                 });
 
             } catch (err) {

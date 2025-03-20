@@ -1,14 +1,32 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/projects';
+const API_URL = `${import.meta.env.VITE_API_URL}/projects`;
 
 export const getAllProjects = () => {
-    return axios.get(API_URL,{ withCredentials: true });
+    return axios.get(API_URL, { withCredentials: true });
+};
+export const approveProject = (id) => {
+    return axios.get(`${API_URL}/${id}/approve`, { withCredentials: true });
+};
+export const getAllOrgw = () => {
+    return axios.get(API_URL, { withCredentials: true });
+};
+export const getPendingProjects = () => {
+    return axios.get(`${API_URL}/pending`, { withCredentials: true });
+};
+export const rejectProject = (id) => {
+    return axios.get(`${API_URL}/${id}/reject`, { withCredentials: true });
+};
+export const getPendingVolunteers = (id) => {
+    return axios.get(`${API_URL}/${id}/pending-volunteer`, { withCredentials: true });
+};
+export const rejectVolunteerToProject = (volunteerId, projectId) => {
+    return axios.put(`${API_URL}/${volunteerId}/${projectId}/rejectVolunteer`, { withCredentials: true });
+};
+export const approveVolunteerToProject = (volunteerId, projectId) => {
+    return axios.put(`${API_URL}/${volunteerId}/${projectId}/approveVolunteer`, { withCredentials: true });
 };
 
-export const approveProject = (id) => {
-    return axios.get(`${API_URL}/${id}/approve`,{ withCredentials: true });
-};
 export const deleteProject = async (projectId) => {
     try {
         const response = await axios.delete(`${API_URL}/${projectId}`, { withCredentials: true });
@@ -28,21 +46,9 @@ export const fetchProjects = async () => {
         throw error;
     }
 };
-export const getAllOrgw = () => {
-    return axios.get(API_URL,{ withCredentials: true });
-};
-export const getPendingProjects = () => {
-    return axios.get(`${API_URL}/pending`,{ withCredentials: true });
-};
-export const getAllOrg2 = () => {
-    return axios.get(API_URL,{ withCredentials: true });
-};
-export const rejectProject = (id) => {
-    return axios.get(`${API_URL}/${id}/reject`,{ withCredentials: true });
-};
 export const getProjectsByOrgId = async (organizationId) => {
-    const response = await axios.get(`${API_URL}/organization/${organizationId}`,{ withCredentials: true });
+    const response = await axios.get(`${API_URL}/organization/${organizationId}`, { withCredentials: true });
     console.log(response.data);
-    
+
     return response;
 };

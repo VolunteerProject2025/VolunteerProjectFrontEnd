@@ -1,16 +1,27 @@
 import Swal from 'sweetalert2';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { editOrg } from '../hooks/organizationService';
-import { organizationProfile } from '../hooks/profileHook';
+
+import { organizationProfile } from "../hooks/profileHook";
 
 export function UpdateOrgProfile() {
     // Get organization data from context
     const { organization, refreshOrgData } = organizationProfile();
-    
+    const provinces = [
+        "Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Hải Phòng", "Cần Thơ", "An Giang", "Bà Rịa - Vũng Tàu",
+        "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", "Bình Dương",
+        "Bình Phước", "Bình Thuận", "Cà Mau", "Cao Bằng", "Đắk Lắk", "Đắk Nông", "Điện Biên",
+        "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Tĩnh", "Hải Dương",
+        "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu",
+        "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình",
+        "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh",
+        "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa",
+        "Thừa Thiên Huế", "Tiền Giang", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc",
+        "Yên Bái"
+    ];
     const [formData, setFormData] = useState({
         name: '',
         description: '',
-        contactEmail: '',
         address: '',
         phone: ''
     });
@@ -26,7 +37,6 @@ export function UpdateOrgProfile() {
             setFormData({
                 name: orgData.name || '',
                 description: orgData.description || '',
-                contactEmail: orgData.contactEmail || '',
                 address: orgData.address || '',
                 phone: orgData.phone || ''
             });
@@ -146,14 +156,19 @@ export function UpdateOrgProfile() {
                                             <div className="col-lg-6">
                                                 <input className="form__field" type="text" name="name" placeholder="Organization Name *" onChange={handleChange} value={formData.name} required />
                                             </div>
-                                            <div className="col-lg-6">
-                                                <input className="form__field" type="email" name="contactEmail" placeholder="Email *" onChange={handleChange} value={formData.contactEmail} required />
-                                            </div>
+                                          
                                             <div className="col-12">
                                                 <textarea className="form__field form__message" name="description" placeholder="Description" onChange={handleChange} value={formData.description}></textarea>
                                             </div>
                                             <div className="col-12">
-                                                <input className="form__field" type="text" name="address" placeholder="Address" onChange={handleChange} value={formData.address} />
+                                                <select className="form__field" name="address" value={formData.address} onChange={handleChange} required>
+                                                    <option value="">Chọn tỉnh/thành phố</option>
+                                                    {provinces.map((province, index) => (
+                                                        <option key={index} value={province}>
+                                                            {province}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             <div className="col-lg-6">
                                                 <input className="form__field" type="text" name="phone" placeholder="Phone *" onChange={handleChange} value={formData.phone} required />

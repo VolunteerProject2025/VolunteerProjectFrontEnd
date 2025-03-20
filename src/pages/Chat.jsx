@@ -1,37 +1,26 @@
 import { useContext } from "react";
-import { ChatContext } from "../context/ChatContext";
-import { Container, Stack } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { AuthContext } from '../context/AuthContext';
-import '../assets/css/chat.css'
 
-import UserChat from "../components/UserChat";
-import PotentialChats from "../components/PotentialChat";
+import ChatList from "../components/ChatList";
 import ChatBox from "../components/ChatBox";
-export function Chat () {
-    const { user } = useContext(AuthContext);
 
-    const {userChats,isUserChatLoading,updateCurrentChat} = useContext(ChatContext) 
-    return (
-    <Container className="chat">
-        <PotentialChats />
-    {userChats?.length < 1 ? null: (
-        <Stack direction="horizontal" 
-               gap={4}
-               className="align-items-start" >
-            <Stack className="messages-box flex-grow-0 pe-3" gap={3}>
-                {isUserChatLoading && <p>Loading chats...</p>}
-                {userChats?.map((chat,index)=>{
-                    return(
-                        <div key={index} onClick={()=> updateCurrentChat(chat)}>
-                            <UserChat  chat={chat} user={user}/>
-                        </div>
-                    )
-                })}
-            </Stack>
-            <ChatBox />
-        </Stack>
-    ) }
+export function Chat() {
+    const { user } = useContext(AuthContext);
     
-    </Container>  );
-}   
- 
+    return (
+        <Container fluid className="py-5" style={{ backgroundColor: "#eee" }}>
+            <Row>
+                <Col md="6" lg="5" xl="4" className="mb-4 mb-md-0">
+                    <ChatList />
+                </Col>
+
+                <Col md="6" lg="7" xl="8">
+                    <ChatBox />
+                </Col>
+            </Row>
+        </Container>
+    );
+}
+
+export default Chat;
