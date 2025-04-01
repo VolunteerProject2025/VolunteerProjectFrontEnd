@@ -11,7 +11,7 @@ export function OrgProjectList() {
     const navigate = useNavigate();
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const [error, setError] = useState(""); 
 
     useEffect(() => {
         fetchProjects();
@@ -72,7 +72,7 @@ export function OrgProjectList() {
                         <li key={project._id} className="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 className="mb-1">{project.title}</h6>
-<p className="mb-1">{project.description}</p>
+                                <p className="mb-1">{project.description}</p>
                                 <small className="text-muted">Category: {project.categories || "No Category"}</small>
                             </div>
                             <button

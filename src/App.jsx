@@ -124,7 +124,6 @@ function App() {
                                 <Route path="/projects/:id/edit" element={
                                     <PrivateRoute
                                         allowedRoles={['Organization']}
-                                        requireApprovedOrg={true}
                                     >
                                         <Layout2><UpdateProject /></Layout2>
                                     </PrivateRoute>

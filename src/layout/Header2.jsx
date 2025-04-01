@@ -133,12 +133,12 @@ const Header2 = () => {
 
                                     <li className="main-menu__item main-menu__item--has-child">
                                         {user && user.role === "Organization" && organization.organization !== null && (
-                                                <li>
+                                               
                                                     <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/organization/${organizationId}`}>
                                                         <i className="fas fa-building"></i>
                                                         My Projects
                                                     </Link>
-                                                </li>
+                                               
                                             )}
 
                                  
@@ -243,7 +243,7 @@ const Header2 = () => {
 
                             ) : (<>
                                 <span className="button button--squared">
-                                    <div><Link style={{ color: "black" }} to="/login" >Log In</Link></div>
+                                    <div><Link style={{ color: "black" }} to="/login" >Sign In</Link></div>
 
                                 </span>
                                 <span className="button button--squared">

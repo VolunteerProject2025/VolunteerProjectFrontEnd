@@ -31,3 +31,10 @@ export const likePost = async (id, data) => {
 export const addComment = async (id, data) => {
     return await axios.post(`${API_URL}/${id}/comment`, data);
 };
+export const editComment = async (postId, commentId, data) => {
+    return await axios.put(`${API_URL}/${postId}/comment/${commentId}`, data);
+};
+
+export const deleteComment = async (postId, commentId) => {
+    return await axios.delete(`${API_URL}/${postId}/comment/${commentId}`);
+};

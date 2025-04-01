@@ -26,7 +26,9 @@ export const rejectVolunteerToProject = (volunteerId, projectId) => {
 export const approveVolunteerToProject = (volunteerId, projectId) => {
     return axios.put(`${API_URL}/${volunteerId}/${projectId}/approveVolunteer`, { withCredentials: true });
 };
-
+export const getDetailProject = (id) => {
+    return axios.get(`${API_URL}/${id}`, { withCredentials: true });
+};  
 export const deleteProject = async (projectId) => {
     try {
         const response = await axios.delete(`${API_URL}/${projectId}`, { withCredentials: true });

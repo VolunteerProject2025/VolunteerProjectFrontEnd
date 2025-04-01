@@ -1,11 +1,10 @@
 /* events.css */
-.post-list .main {
+
+
+.loading-overlay .main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-}
-
-.post-list .loading-overlay {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -14,7 +13,7 @@
     color: #666;
 }
 
-.post-list .spinner {
+.spinner {
     display: inline-block;
     width: 32px;
     height: 32px;
@@ -29,50 +28,47 @@
     100% { transform: rotate(360deg); }
 }
 
-.post-list .events-inner {
+.events-inner {
     background: #f9fafb;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
-.post-list .add-post {
+.add-post {
     margin-bottom: 20px;
-    display: block; /* Đảm bảo hiển thị container */
 }
 
-.post-list .button {
+.button {
     padding: 8px 16px;
     border-radius: 6px;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s;
-    display: inline-block; /* Đảm bảo hiển thị nút */
-    text-decoration: none; /* Loại bỏ gạch chân của Link */
 }
 
-.post-list .button-primary {
+.button-primary {
     background-color: #2563eb;
     color: white;
 }
 
-.post-list .button-primary:hover {
+.button-primary:hover {
     background-color: #1d4ed8;
 }
 
-.post-list .no-posts {
+.no-posts {
     text-align: center;
     color: #6b7280;
     padding: 20px;
 }
 
-.post-list .posts-grid {
+.posts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Khôi phục 2 cột cố định */
     gap: 20px;
 }
 
-.post-list .post-card {
+.post-card {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -81,12 +77,12 @@
     position: relative;
 }
 
-.post-list .post-card:hover {
+.post-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
-.post-list .post-header {
+.post-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -95,17 +91,17 @@
     position: relative;
 }
 
-.post-list .post-date {
+.post-date {
     font-size: 14px;
     color: #6b7280;
     text-align: center;
 }
 
-.post-list .post-menu {
+.post-menu {
     position: relative;
 }
 
-.post-list .menu-button {
+.menu-button {
     background: none;
     border: none;
     cursor: pointer;
@@ -115,11 +111,11 @@
     line-height: 1;
 }
 
-.post-list .menu-button:hover {
+.menu-button:hover {
     color: #2563eb;
 }
 
-.post-list .dropdown-menu {
+.dropdown-menu {
     background: white;
     border: 1px solid #e5e7eb;
     border-radius: 4px;
@@ -129,7 +125,7 @@
     z-index: 10000;
 }
 
-.post-list .dropdown-item {
+.dropdown-item {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -144,48 +140,48 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-.post-list .dropdown-item:hover {
+.dropdown-item:hover {
     background: #f1f5f9;
     color: #dc2626;
 }
 
-.post-list .post-image {
+.post-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
-.post-list .post-content {
+.post-content {
     padding: 15px;
 }
 
-.post-list .post-title a {
+.post-title a {
     font-size: 18px;
     font-weight: 600;
     color: #2563eb;
     text-decoration: none;
 }
 
-.post-list .post-title a:hover {
+.post-title a:hover {
     text-decoration: underline;
 }
 
-.post-list .post-excerpt {
+.post-excerpt {
     color: #4b5563;
     margin: 10px 0;
 }
 
-.post-list .post-details p {
+.post-details p {
     font-size: 14px;
     color: #6b7280;
     margin: 5px 0;
 }
 
-.post-list .post-details svg {
+.post-details svg {
     margin-right: 5px;
 }
 
-.post-list .post-actions {
+.post-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -194,7 +190,7 @@
     padding-top: 10px;
 }
 
-.post-list .action-button {
+.action-button {
     background: none;
     border: none;
     display: flex;
@@ -205,70 +201,32 @@
     transition: color 0.3s;
 }
 
-.post-list .action-button:hover {
+.action-button:hover {
     color: #2563eb;
 }
 
-.post-list .share-buttons {
+.share-buttons {
     display: flex;
     gap: 10px;
 }
 
-.post-list .comments-section {
+.comments-section {
     border-top: 1px solid #e5e7eb;
     padding-top: 15px;
 }
 
-.post-list .comment {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.post-list .comment-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-}
-
-.post-list .comment-content {
-    flex: 1;
-}
-
-.post-list .comment-author {
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.post-list .comment-time {
-    font-size: 12px;
-    color: #9ca3af;
-}
-
-.post-list .reply-button {
-    background: none;
-    border: none;
-    color: #2563eb;
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.post-list .reply-button:hover {
-    text-decoration: underline;
-}
-
-.post-list .no-comments {
+.no-comments {
     color: #6b7280;
     font-size: 14px;
 }
 
-.post-list .comment-input {
+.comment-input {
     display: flex;
     gap: 10px;
     margin-top: 15px;
 }
 
-.post-list .comment-input input {
+.comment-input input {
     flex: 1;
     padding: 8px;
     border: 1px solid #d1d5db;
@@ -276,7 +234,229 @@
     outline: none;
 }
 
-.post-list .comment-input input:focus {
+.comment-input input:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.share-container {
+    position: relative;
+    display: inline-block;
+}
+
+.share-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.share-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    z-index: 10;
+}
+
+.share-container:hover .share-options {
+    display: flex;
+    gap: 10px;
+}
+
+/* CSS cho bình luận */
+/* Comment container */
+.comment {
+    display: flex;
+    margin: 10px 0;
+    position: relative;
+}
+
+/* Comment gốc (level-0) không thụt */
+.comment.level-0 {
+    margin-left: 0;
+}
+
+/* Comment con thụt dần theo từng cấp */
+.comment.level-1 {
+    margin-left: 40px; /* Thụt vào 40px cho comment con cấp 1 */
+}
+.comment.level-2 {
+    margin-left: 80px; /* Thụt thêm cho comment con cấp 2 */
+}
+.comment.level-3 {
+    margin-left: 120px; /* Thụt thêm cho comment con cấp 3 */
+}
+
+/* Đường dẫn từ comment con đến comment cha */
+.comment-connector {
+    position: absolute;
+    top: -10px;
+    left: -20px;
+    width: 20px;
+    height: 20px;
+    border-left: 2px solid #ccc;
+    border-bottom: 2px solid #ccc;
+    border-radius: 0 0 0 10px;
+}
+
+/* Avatar */
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Comment content */
+.comment-content {
+    flex: 1;
+    background-color: #f0f2f5; /* Màu nền giống Facebook */
+    border-radius: 15px;
+    padding: 8px 12px;
+    position: relative;
+}
+
+/* Comment header (author and menu) */
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.comment-author {
+    font-weight: bold;
+    margin: 0;
+    font-size: 13px;
+    color: #050505;
+}
+
+/* Comment text */
+.comment-text {
+    margin: 0;
+    font-size: 14px;
+    word-wrap: break-word;
+    color: #050505;
+}
+
+/* Comment footer (reply, time) */
+.comment-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    gap: 10px;
+}
+
+.reply-button {
+    background: none;
+    border: none;
+    color: #65676b;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.reply-button:hover {
+    text-decoration: underline;
+}
+
+.comment-time {
+    font-size: 12px;
+    color: #65676b;
+    margin: 0;
+}
+
+/* Comment menu (dấu 3 chấm) */
+.comment-menu {
+    position: relative;
+}
+
+.comment-menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #65676b;
+    font-size: 16px;
+    padding: 0;
+}
+
+.comment-dropdown-menu {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f2f5;
+}
+
+.dropdown-item svg {
+    margin-right: 5px;
+}
+
+/* Edit comment form */
+.edit-comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.edit-comment-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    font-size: 14px;
+    background-color: #fff;
+    outline: none;
+}
+
+.edit-comment-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.edit-comment-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.save-edit-button,
+.cancel-edit-button {
+    background: none;
+    border: none;
+    color: #65676b;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+}
+
+.save-edit-button:hover,
+.cancel-edit-button:hover {
+    color: #2563eb;
 }

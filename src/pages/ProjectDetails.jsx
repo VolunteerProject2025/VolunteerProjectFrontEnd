@@ -14,6 +14,8 @@ import { deleteProject, approveVolunteerToProject, rejectVolunteerToProject } fr
 import { ProjectContext } from "../context/ProjectContext";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Tabs, Tab } from 'react-bootstrap';
+
 const localizer = momentLocalizer(moment);
 
 export function ProjectDetails() {
@@ -37,6 +39,9 @@ export function ProjectDetails() {
   // New states for join project modal
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [joinMessage, setJoinMessage] = useState("");
+
+  // New state for active tab
+  const [activeTab, setActiveTab] = useState('details');
 
   useEffect(() => {
     // Fetch Project Details
@@ -125,9 +130,6 @@ export function ProjectDetails() {
       navigate(`/projects/organization/${project.data.organization._id}`);
     }
   };
-  const handleShow = () => {
-    setShow(true);
-  };
 
   const handleReject = async (volunteerId, projectId) => {
     try {
@@ -156,6 +158,7 @@ export function ProjectDetails() {
       console.log(error);
     }
   };
+
   const handleCompleteSchedule = async (scheduleId) => {
     try {
       setEditSchedule(null);
@@ -163,7 +166,7 @@ export function ProjectDetails() {
         schedule._id === scheduleId ? { ...schedule, status: "Completed" } : schedule
       );
 
-      setSchedules(updatedSchedules); // Cập nhật trạng thái trên UI trước
+      setSchedules(updatedSchedules);
 
       const response = await fetch(`http://localhost:3000/schedules/${scheduleId}`, {
         method: "PUT",
@@ -181,6 +184,7 @@ export function ProjectDetails() {
       alert("Failed to update schedule.");
     }
   };
+
   const handleDeleteSchedule = async (scheduleId) => {
     setEditSchedule(null);
     if (window.confirm("Are you sure you want to delete this schedule?")) {
@@ -220,258 +224,304 @@ export function ProjectDetails() {
 
   if (error) return <p className="text-red-500 text-center">{error}</p>;
   if (!project) return <p>Loading...</p>;
+
   return (
     <div className="project-container">
-      {/* Left column: Project information */}
-      <div className="project-details">
-        <h2 className="tieude">Tên dự án: {project.data.title}</h2>
-        <div style={{ display: "flex" }}>
-          <p className="tieude" style={{ width: "20%" }}>Mô tả dự án:</p>
-          <p>{project.data.description}</p>
-        </div>
-        <div style={{ display: "flex" }}>
-          <p className="tieude" style={{ width: "18%" }}>Location: </p>
-          <p>{project.data.location}</p>
-        </div>
-        <div style={{ display: "flex" }}>
-          <p className="tieude" style={{ width: "18%" }}>Category:</p>
-          <p>{project.data.categories}</p>
-        </div>
-        <div style={{ display: "flex" }}>
-          <p className="tieude" style={{ width: "18%" }}>Status: </p>
-          <p>{project.data.status}</p>
-        </div>
-        <div style={{ display: "flex" }}>
-          <p className="tieude" style={{ width: "18%" }}>Start Date:</p>
-          <p>{project.data.startDate?.split("T")[0]}</p>
-        </div>
-        <div style={{ display: "flex" }}>
-          <p className="tieude" style={{ width: "18%" }}>End Date:</p>
-          <p>{project.data.endDate?.split("T")[0]}</p>
-        </div>
-
-        {/* Volunteers Section */}
-        <div className="project-volunteers">
-          <h3 className="tieude">Volunteers</h3>
-          {user?.role === "Volunteer" ? (
-            <p>Total Volunteers: {totalVolunteers}</p>
-          ) : (
-            <>
-              {volunteers.length > 0 ? (
-                <ul className="volunteers-list">
-                  {volunteers.map((vol) => (
-                    <li key={vol._id} className="volunteer-item">
-                      <p className="volunteer-name">{vol.fullName || "Anonymous"}</p>
-                      <p className="volunteer-email">{vol.email || "No email available"}</p>
-                    </li>
-                  ))}
-                </ul>
+      <Tabs
+        id="justify-tab-example"
+        className="mb-3"
+        justify
+        activeKey={activeTab}
+        onSelect={(k) => setActiveTab(k)}
+      >
+        <Tab eventKey="details" title="Project Details">
+          <div className="project-card">
+            <div className="project-image-container">
+              {project.data.image ? (
+                <img src={`http://localhost:3000${project.data.image}`} className="project-image" alt="Project" />
               ) : (
-                <p>No accepted volunteers yet.</p>
+                <p>No image available</p>
               )}
-
-              {/* Pagination for volunteers */}
-              {totalPages > 1 && (
-                <div className="pagination-controls">
-                  <button
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    className={`pag-btn ${currentPage === 1 ? "disabled" : ""}`}
-                  >
-                    Previous
-                  </button>
-                  <span className="page-info">{`Page ${currentPage} of ${totalPages}`}</span>
-                  <button
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    className={`pag-btn ${currentPage === totalPages ? "disabled" : ""}`}
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <div className="button-group">
-          {user?.role === "Organization" && user._id === project.data.organization.user ? (
-            <>
-              <button className="project-btn btn-edit" onClick={() => navigate(`/projects/${id}/edit`)}>✏️ Edit</button>
-              <button className="project-btn btn-delete" onClick={handleDeleteProject}>🗑 Delete</button>
-              <button className="project-btn btn-add" onClick={() => navigate(`/create-schedule/${id}`)}>➕ Thêm lịch trình</button>
-            </>
-          ) : user?.role === "Volunteer" ? (
-            <button
-              onClick={handleJoinClick}
-              disabled={participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected"}
-              className={`project-btn ${participationStatus === "Accepted"
-                ? "btn-accepted"
-                : participationStatus === "Pending"
-                  ? "btn-pending"
-                  : participationStatus === "Rejected"
-                    ? "btn-rejected"
-                    : "btn-join"
-                }`}
-              style={{
-                opacity: participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected" ? 0.7 : 1,
-                cursor: participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected" ? "not-allowed" : "pointer",
-              }}
-            >
-              {participationStatus === "Accepted"
-                ? "Accepted"
-                : participationStatus === "Pending"
-                  ? "Pending Approval"
-                  : participationStatus === "Rejected"
-                    ? "Rejected"
-                    : "✅ Join Project"}
-            </button>
-          ) : null}
-        </div>
-
-        {/* Join Project Modal */}
-        <Modal show={showJoinModal} onHide={() => setShowJoinModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Join Project: {project.data.title}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="form-group">
-              <label>Write a message to the project organizer:</label>
-              <textarea
-                className="form-control"
-                rows="5"
-                placeholder="Introduce yourself and explain why you'd like to join this project..."
-                value={joinMessage}
-                onChange={(e) => setJoinMessage(e.target.value)}
-              ></textarea>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowJoinModal(false)}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleSubmitJoinRequest}>
-              Send Request
-            </Button>
-          </Modal.Footer>
-        </Modal>
+            <div class="project-info">
+              <h5 className="tieude">{project.data.title}</h5>
 
-        <div className="project-image-container">
-          {project.data.image ? (
-            <img src={`http://localhost:3000${project.data.image}`} className="project-image" alt="Project" />
-          ) : (
-            <p>No image available</p>
-          )}
-        </div>
-        {user?.role === "Organization" && user._id === project.data.organization.user ? (
-          <div style={{ marginTop: 20, display: 'grid' }}>
-            <Button variant="warning" onClick={() => handleShow()} style={{ padding: 20 }}>
-              Pending Volunteers
-            </Button>
+              <div className="detail-row">
+                <p className="tieude">Location:</p>
+                <p>{project.data.location}</p>
+              </div>
+              <div className="detail-row">
+                <p className="tieude">Category:</p>
+                <p>{project.data.categories}</p>
+              </div>
+              <div className="detail-row">
+                <p className="tieude">Status:</p>
+                <p>{project.data.status}</p>
+              </div>
+              <div className="detail-row">
+                <p className="tieude">Time:</p>
+                <p>
+                  {new Date(project.data.startDate).toLocaleDateString("vi-VN")} - {new Date(project.data.endDate).toLocaleDateString("vi-VN")}
+                </p>
+              </div>
+              <div className="detail-row">
+                <p className="tieude">Description:</p>
+                <p>{project.data.description}</p>
+              </div>
 
-            <Modal
-              show={show}
-              onHide={() => setShow(false)}
-              size="xl"
-              dialogClassName="modal-90w"
-              aria-labelledby="example-custom-modal-styling-title"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title id="example-custom-modal-styling-title">
-                  Pending Voluteers List
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                {volunteersList.length > 0 ? (
-                  volunteersList.map((v) => (
-                    <li key={project._id} className="list-group-item d-flex justify-content-between align-items-center">
-                      <div>
-                        <h6 key={v.volunteer._id} className="mb-1">Fullname: {v.volunteer.fullName}</h6>
-                        <p key={`dob-${v.volunteer._id}`} className="mb-1">DOB: {new Date(v.volunteer.dateOfBirth).toLocaleDateString("vi-VN")}</p>
-                        <p key={`email-${v.volunteer._id}`} className="mb-1">Gender: {v.volunteer.gender}</p>
-                        <>
-                          Skills:
-                          {v.volunteer.skills.map((skill) => (
-                            <li style={{ fontSize: 14 }} key={skill._id} className="mb-1">{skill.name}</li>
-                          ))}
-                        </>
-                        {v.message && (
-                          <div>
-                            <p key={`message-${v.volunteer._id}`} className="mt-2"><strong>Message:</strong></p>
-                            <p key={`message-content-${v.volunteer._id}`} className="mb-1 fst-italic">"{v.message}"</p>
-                          </div>
-                        )}
-                      </div>
+              <div className="button-group">
+                {user?.role === "Organization" && user._id === project.data.organization.user ? (
+                  <>
+                    <button className="project-btn btn-edit" onClick={() => navigate(`/projects/${id}/edit`)}>✏️ Edit</button>
+                    <button className="project-btn btn-delete" onClick={handleDeleteProject}>🗑 Delete</button>
+                  </>
+                ) : user?.role === "Volunteer" ? (
+                  <button
+                    onClick={handleJoinClick}
+                    disabled={participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected"}
+                    className={`project-btn ${participationStatus === "Accepted"
+                      ? "btn-accepted"
+                      : participationStatus === "Pending"
+                        ? "btn-pending"
+                        : participationStatus === "Rejected"
+                          ? "btn-rejected"
+                          : "btn-join"
+                      }`}
+                    style={{
+                      opacity: participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected" ? 0.7 : 1,
+                      cursor: participationStatus === "Pending" || participationStatus === "Accepted" || participationStatus === "Rejected" ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    {participationStatus === "Accepted"
+                      ? "Accepted"
+                      : participationStatus === "Pending"
+                        ? "Pending Approval"
+                        : participationStatus === "Rejected"
+                          ? "Rejected"
+                          : "✅ Join Project"}
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </Tab>
 
-                      <div>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleReject(v.volunteer._id, v.project._id)}
-                        >
-                          Reject
-                        </button>
+        <Tab eventKey="schedule" title="Schedule">
+          <div className="project-schedule">
+            {/* Header */}
+            <div className="schedule-header">
+              <h3>📅 Lịch trình dự án</h3>
+              {user?.role === "Organization" && String(user._id) === String(project.data.organization?.user) && (
+                <button className="btn btn-primary" onClick={() => navigate(`/create-schedule/${id}`)}>
+                  ➕ Thêm lịch trình
+                </button>
+              )}
+            </div>
 
-                        <button
-                          className="btn btn-success btn-sm"
-                          onClick={() => handleApprove(v.volunteer._id, v.project._id)}
-                          style={{ marginLeft: 15 }}
-                        >
-                          Approve
-                        </button>
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <p>No pending volunteers.</p>
-                )}
-              </Modal.Body>
-            </Modal>
+            {/* Bảng lịch trình */}
+            {schedules.length !== 0 ? (
+              <table className="schedule-table">
+                <thead>
+                  <tr>
+                    <th>📆 Ngày</th>
+                    <th>⏰ Giờ Bắt đầu</th>
+                    <th>⏳ Giờ Kết thúc</th>
+                    <th>📄 Mô tả</th>
+                    <th>🔖 Trạng thái</th>
+                    <th>⚙️ Hành động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {schedules
+                    .slice()
+                    .sort((a, b) => {
+                      // Đưa lịch trình "Completed" xuống cuối
+                      if (a.status === "Completed" && b.status !== "Completed") return 1;
+                      if (a.status !== "Completed" && b.status === "Completed") return -1;
+
+                      // So sánh theo ngày (date) trước
+                      const dateA = new Date(a.date);
+                      const dateB = new Date(b.date);
+                      if (dateA < dateB) return -1;
+                      if (dateA > dateB) return 1;
+
+                      // Nếu ngày giống nhau, sắp xếp theo startTime
+                      return a.startTime.localeCompare(b.startTime);
+                    })
+
+                    .map((schedule) => (
+                      <tr key={schedule._id} className={`status-${schedule.status.toLowerCase()}`}>
+                        <td>{schedule.date.split("T")[0]}</td>
+                        <td>{schedule.startTime}</td>
+                        <td>{schedule.endTime}</td>
+                        <td>{schedule.description}</td>
+                        <td><span className={`status-badge ${schedule.status.toLowerCase()}`}>{schedule.status}</span></td>
+                        <td>
+                          {user?.role === "Organization" && user._id === project.data.organization.user && (
+                            <div className="action-buttons">
+                              <button className="btn btn-warning" onClick={() => handleEditSchedule(schedule)}>✏️ Edit</button>
+                              <button className="btn btn-danger" onClick={() => handleDeleteSchedule(schedule._id)}>🗑 Delete</button>
+                              {schedule.status !== "Completed" && (
+                                <button className="btn btn-success" onClick={() => handleCompleteSchedule(schedule._id)}>✅ Complete</button>
+                              )}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="no-schedule">Không có lịch trình nào.</p>
+            )}
           </div>
 
-        ) : null}
+          {/* Form chỉnh sửa lịch trình */}
+          {editSchedule && (
+            <div className="edit-schedule-form">
+              <h3>✏️ Chỉnh sửa lịch trình</h3>
+              <div className="form-group">
+                <label>Ngày:</label>
+                <input
+                  type="date"
+                  value={editSchedule.date.split("T")[0]}
+                  min={project?.data?.startDate?.split("T")[0]}
+                  max={project?.data?.endDate?.split("T")[0]}
+                  onChange={(e) => setEditSchedule({ ...editSchedule, date: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label>Giờ bắt đầu:</label>
+                <input
+                  type="time"
+                  value={editSchedule.startTime}
+                  onChange={(e) => setEditSchedule({ ...editSchedule, startTime: e.target.value })}
+                />
+              </div>
+              <div className="form-group">
+                <label>Giờ kết thúc:</label>
+                <input
+                  type="time"
+                  value={editSchedule.endTime}
+                  onChange={(e) => {
+                    const newEndTime = e.target.value;
+                    if (newEndTime <= editSchedule.startTime) {
+                      alert("End time must be greater than start time!");
+                    } else {
+                      setEditSchedule({ ...editSchedule, endTime: newEndTime });
+                    }
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <label>Mô tả:</label>
+                <textarea
+                  value={editSchedule.description}
+                  onChange={(e) => setEditSchedule({ ...editSchedule, description: e.target.value })}
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label>Trạng thái:</label>
+                <select
+                  value={editSchedule.status}
+                  onChange={(e) => setEditSchedule({ ...editSchedule, status: e.target.value })}
+                  className={`status-select ${editSchedule.status.toLowerCase()}`}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                </select>
+              </div>
+              <div className="form-group button-group">
+                <button className="btn btn-success" onClick={handleUpdateSchedule}>💾 Save</button>
+                <button className="btn btn-secondary" onClick={() => setEditSchedule(null)}>❌ Cancel</button>
+              </div>
+            </div>
+          )}
+        </Tab>
 
-      </div>
-
-      {/* Right column: Project schedules */}
-      <div className="project-schedule">
-        <h3>📅 Lịch trình dự án</h3>
-        {schedules.length !== 0 ? (
-          <ul>
-            {schedules
-              .slice() // Tạo một bản sao của mảng để tránh thay đổi trạng thái gốc
-              .sort((a, b) => {
-                if (a.status === "Completed" && b.status !== "Completed") return 1;
-                if (a.status !== "Completed" && b.status === "Completed") return -1;
-                return a.startTime.localeCompare(b.startTime);
-              }) // Sắp xếp theo startTime
-              .map((schedule) => (
-                <li className={`schedule-item ${schedule.status.toLowerCase()}`} key={schedule._id}>
-                  <strong>{schedule.date.split("T")[0]}</strong>: {schedule.startTime} - {schedule.endTime}
-                  <p>{schedule.description}</p>
-                  <p><strong>Trạng thái:</strong> {schedule.status}</p>
-
-                  {user?.role === "Organization" && user._id === project.data.organization.user && (
-                    <div className="schedule-actions">
-                      <button className="project-btn btn-edit" onClick={() => handleEditSchedule(schedule)}>✏️ Edit</button>
-                      <button className="project-btn btn-delete" onClick={() => handleDeleteSchedule(schedule._id)}>🗑 Delete</button>
-                      {schedule.status !== "Completed" && (
-                        <button className="project-btn btn-complete" onClick={() => handleCompleteSchedule(schedule._id)}>✅ Hoàn thành</button>
+        {user?.role === "Organization" && user._id === project.data.organization.user && (
+          <Tab eventKey="pendingVolunteers" title="Pending Volunteers">
+            <div className="pending-volunteers">
+              <h3>Pending Volunteers</h3>
+              {volunteersList.length > 0 ? (
+                volunteersList.map((v) => (
+                  <li key={v.volunteer._id} className="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 className="mb-1">Fullname: {v.volunteer.fullName}</h6>
+                      <p className="mb-1">DOB: {new Date(v.volunteer.dateOfBirth).toLocaleDateString("vi-VN")}</p>
+                      <p className="mb-1">Gender: {v.volunteer.gender}</p>
+                      <>
+                        Skills:
+                        {v.volunteer.skills.map((skill) => (
+                          <li style={{ fontSize: 14 }} key={skill._id} className="mb-1">{skill.name}</li>
+                        ))}
+                      </>
+                      {v.message && (
+                        <div>
+                          <p className="mt-2"><strong>Message:</strong></p>
+                          <p className="mb-1 fst-italic">"{v.message}"</p>
+                        </div>
                       )}
                     </div>
-                  )}
-                </li>
-              ))}
-          </ul>
-        ) : (
-          <p>Không có lịch trình nào.</p>
+
+                    <div>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleReject(v.volunteer._id, v.project._id)}
+                      >
+                        Reject
+                      </button>
+
+                      <button
+                        className="btn btn-success btn-sm"
+                        onClick={() => handleApprove(v.volunteer._id, v.project._id)}
+                        style={{ marginLeft: 15 }}
+                      >
+                        Approve
+                      </button>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <p>No pending volunteers.</p>
+              )}
+            </div>
+          </Tab>
         )}
-      </div>
+      </Tabs>
+
+      {/* Join Project Modal */}
+      <Modal show={showJoinModal} onHide={() => setShowJoinModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Join Project: {project.data.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-group">
+            <label>Write a message to the project organizer:</label>
+            <textarea
+              className="form-control"
+              rows="5"
+              placeholder="Introduce yourself and explain why you'd like to join this project..."
+              value={joinMessage}
+              onChange={(e) => setJoinMessage(e.target.value)}
+            ></textarea>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowJoinModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSubmitJoinRequest}>
+            Send Request
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Schedule edit form */}
       {editSchedule && (
         <div className="edit-schedule-form">
           <h3> Edit Schedule</h3>
-
 
           <div className="form-group">
             <label>Date:</label>
@@ -483,11 +533,14 @@ export function ProjectDetails() {
               onChange={(e) => setEditSchedule({ ...editSchedule, date: e.target.value })}
             />
           </div>
-          <div className="form-group"><label>Start Time:</label>
+          <div className="form-group">
+            <label>Start Time:</label>
             <input
               type="time"
               value={editSchedule.startTime}
-              onChange={(e) => setEditSchedule({ ...editSchedule, startTime: e.target.value })} /></div>
+              onChange={(e) => setEditSchedule({ ...editSchedule, startTime: e.target.value })}
+            />
+          </div>
           <div className="form-group">
             <label>End Time:</label>
             <input
@@ -500,7 +553,8 @@ export function ProjectDetails() {
                 } else {
                   setEditSchedule({ ...editSchedule, endTime: newEndTime });
                 }
-              }} />
+              }}
+            />
           </div>
           <div className="form-group">
             <label>Description:</label>
