@@ -26,7 +26,7 @@ export function Login() {
         
         <section className="section ">
             <div className="container">
-                <div className="row offset-margin">
+                <div className="row offset-margin ">
                     <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-4 margin-bottom">
                     </div>
                     <div className="col-md-8 offset-md-2 col-lg-6 offset-lg-0 col-xl-4 margin-bottom">

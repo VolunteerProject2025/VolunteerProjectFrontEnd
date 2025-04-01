@@ -59,11 +59,11 @@ export function OrgProjectList() {
             {/* 🔹 Nút "Create Project" */}
             <div className="text-end">
                 <button className="btn btn-success mb-3" onClick={handleCreateProject}>
-                    ➕ Create Project
+                     Create Project
                 </button>
             </div>
 
-            {loading && <p>Loading...</p>}
+            
             {error && <p className="text-danger">{error}</p>}
 
             {projects.length > 0 ? (

@@ -34,8 +34,7 @@ export function ProjectDetails() {
   const [totalPages, setTotalPages] = useState(1);
   const [show, setShow] = useState(false);
   const { volunteers, setVolunteers } = useContext(ProjectContext);
-  const volunteersList = volunteers[id] || [];
-
+  const [volunteersList, setVolunteerList] = useState([]);
   // New states for join project modal
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [joinMessage, setJoinMessage] = useState("");
@@ -58,19 +57,14 @@ export function ProjectDetails() {
       .then((res) => res.json())
       .then((data) => setSchedules(data || []))
       .catch((err) => console.error("Error fetching schedules:", err));
-
+      //Fetch Pending Volunteers
+      
     // Fetch Volunteers
-    fetch(`http://localhost:3000/projects/${id}/volunteers?page=${currentPage}&limit=10`)
+    
+    fetch(`http://localhost:3000/projects/${id}/pending-volunteer`)
       .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setVolunteersShow(data.data);
-          setTotalVolunteers(data.total);
-          setTotalPages(data.totalPages);
-        }
-      })
-      .catch((err) => console.error("Error fetching project volunteers:", err));
-
+      .then((data) => setVolunteerList(data || []))
+      .catch((err) => console.error("Error fetching schedules:", err));
     // Fetch Participation Status (only source for participationStatus)
     if (user) {
       console.log("🔄 Fetching participation status for user:", user.email);
@@ -132,27 +126,64 @@ export function ProjectDetails() {
   };
 
   const handleReject = async (volunteerId, projectId) => {
+    const isConfirmed = window.confirm("Are you sure you want to rejected this volunteer?");
+    if (!isConfirmed) return;
     try {
       await rejectVolunteerToProject(volunteerId, projectId);
 
-      setVolunteers((prev) => ({
-        ...prev,
-        [projectId]: prev[projectId].filter((v) => v.volunteer._id !== volunteerId),
-      }));
+      setVolunteerList((prev) =>
+        prev.filter((v) => v.volunteer._id !== volunteerId)
+      );
 
     } catch (error) {
       console.log(error);
     }
   };
+  const handleCompleteProject = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to approve this volunteer?");
+    if (!isConfirmed) return;
+    try {
+        if (!project) {
+            console.error("No project data available");
+            return;
+        }
+        // Make sure the current project is the one we want to update
+        if (project.data._id) {
+            const updatedProject = { ...project, status: "Completed" };
 
+            // Update the UI first
+            setProject(updatedProject);
+
+            // Send the update request to the server
+            const response = await fetch(`http://localhost:3000/projects/completed/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "Completed" }),
+              
+            });
+            console.log(response);
+            
+            if (!response.ok) {
+                throw new Error("Failed to complete project");
+            }
+
+            // Alert success and confirm
+            alert("Project marked as Completed!");
+        } else {
+            console.error("Project ID not found");
+        }
+    } catch (error) {
+        console.error("Error completing project:", error);
+        alert("Failed to update project status.");
+    }
+};
   const handleApprove = async (volunteerId, projectId) => {
     try {
       await approveVolunteerToProject(volunteerId, projectId);
 
-      setVolunteers((prev) => ({
-        ...prev,
-        [projectId]: prev[projectId].filter((v) => v.volunteer._id !== volunteerId),
-      }));
+      setVolunteerList((prev) =>
+        prev.filter((v) => v.volunteer._id !== volunteerId)
+      );
 
     } catch (error) {
       console.log(error);
@@ -272,8 +303,9 @@ export function ProjectDetails() {
               <div className="button-group">
                 {user?.role === "Organization" && user._id === project.data.organization.user ? (
                   <>
-                    <button className="project-btn btn-edit" onClick={() => navigate(`/projects/${id}/edit`)}>✏️ Edit</button>
-                    <button className="project-btn btn-delete" onClick={handleDeleteProject}>🗑 Delete</button>
+                    <button className="project-btn btn-edit" onClick={() => navigate(`/projects/${id}/edit`)}> Edit</button>
+                    <button className="project-btn btn-delete" onClick={handleDeleteProject}> Delete</button>
+                    <button className="project-btn btn-delete" onClick={handleCompleteProject}>Completed</button>
                   </>
                 ) : user?.role === "Volunteer" ? (
                   <button
@@ -298,7 +330,7 @@ export function ProjectDetails() {
                         ? "Pending Approval"
                         : participationStatus === "Rejected"
                           ? "Rejected"
-                          : "✅ Join Project"}
+                          : "Join Project"}
                   </button>
                 ) : null}
               </div>
@@ -323,12 +355,12 @@ export function ProjectDetails() {
               <table className="schedule-table">
                 <thead>
                   <tr>
-                    <th>📆 Ngày</th>
-                    <th>⏰ Giờ Bắt đầu</th>
-                    <th>⏳ Giờ Kết thúc</th>
-                    <th>📄 Mô tả</th>
-                    <th>🔖 Trạng thái</th>
-                    <th>⚙️ Hành động</th>
+                  <th>Ngày</th>
+                    <th> Giờ Bắt đầu</th>
+                    <th> Giờ Kết thúc</th>
+                    <th> Mô tả</th>
+                    <th> Trạng thái</th>
+                    <th> Hành động</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -359,10 +391,10 @@ export function ProjectDetails() {
                         <td>
                           {user?.role === "Organization" && user._id === project.data.organization.user && (
                             <div className="action-buttons">
-                              <button className="btn btn-warning" onClick={() => handleEditSchedule(schedule)}>✏️ Edit</button>
-                              <button className="btn btn-danger" onClick={() => handleDeleteSchedule(schedule._id)}>🗑 Delete</button>
+                              <button className="btn btn-warning" onClick={() => handleEditSchedule(schedule)}> Edit</button>
+                              <button className="btn btn-danger" onClick={() => handleDeleteSchedule(schedule._id)}> Delete</button>
                               {schedule.status !== "Completed" && (
-                                <button className="btn btn-success" onClick={() => handleCompleteSchedule(schedule._id)}>✅ Complete</button>
+                                <button className="btn btn-success" onClick={() => handleCompleteSchedule(schedule._id)}> Complete</button>
                               )}
                             </div>
                           )}
@@ -376,68 +408,7 @@ export function ProjectDetails() {
             )}
           </div>
 
-          {/* Form chỉnh sửa lịch trình */}
-          {editSchedule && (
-            <div className="edit-schedule-form">
-              <h3>✏️ Chỉnh sửa lịch trình</h3>
-              <div className="form-group">
-                <label>Ngày:</label>
-                <input
-                  type="date"
-                  value={editSchedule.date.split("T")[0]}
-                  min={project?.data?.startDate?.split("T")[0]}
-                  max={project?.data?.endDate?.split("T")[0]}
-                  onChange={(e) => setEditSchedule({ ...editSchedule, date: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>Giờ bắt đầu:</label>
-                <input
-                  type="time"
-                  value={editSchedule.startTime}
-                  onChange={(e) => setEditSchedule({ ...editSchedule, startTime: e.target.value })}
-                />
-              </div>
-              <div className="form-group">
-                <label>Giờ kết thúc:</label>
-                <input
-                  type="time"
-                  value={editSchedule.endTime}
-                  onChange={(e) => {
-                    const newEndTime = e.target.value;
-                    if (newEndTime <= editSchedule.startTime) {
-                      alert("End time must be greater than start time!");
-                    } else {
-                      setEditSchedule({ ...editSchedule, endTime: newEndTime });
-                    }
-                  }}
-                />
-              </div>
-              <div className="form-group">
-                <label>Mô tả:</label>
-                <textarea
-                  value={editSchedule.description}
-                  onChange={(e) => setEditSchedule({ ...editSchedule, description: e.target.value })}
-                ></textarea>
-              </div>
-              <div className="form-group">
-                <label>Trạng thái:</label>
-                <select
-                  value={editSchedule.status}
-                  onChange={(e) => setEditSchedule({ ...editSchedule, status: e.target.value })}
-                  className={`status-select ${editSchedule.status.toLowerCase()}`}
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                </select>
-              </div>
-              <div className="form-group button-group">
-                <button className="btn btn-success" onClick={handleUpdateSchedule}>💾 Save</button>
-                <button className="btn btn-secondary" onClick={() => setEditSchedule(null)}>❌ Cancel</button>
-              </div>
-            </div>
-          )}
+          
         </Tab>
 
         {user?.role === "Organization" && user._id === project.data.organization.user && (
