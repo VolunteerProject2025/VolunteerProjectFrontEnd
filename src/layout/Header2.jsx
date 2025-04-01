@@ -18,181 +18,75 @@ const Header2 = () => {
 
     return (
         <>
-            <div className="mobile-nav">
-                <div className="mobile-nav__inner">
-                    <div className="mobile-nav__item">
-                        <nav className="menu-holder">
-                            <ul className="mobile-menu">
-                                <li className="mobile-menu__item"><a className="mobile-menu__link" href="#">item</a></li>
-                                <li className="mobile-menu__item"><a className="mobile-menu__link" href="#">item</a></li>
-                                <li className="mobile-menu__item"><a className="mobile-menu__link" href="#">item</a></li>
-                                <li className="mobile-menu__item"><a className="mobile-menu__link" href="#">item</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-
-            <div className="aside-dropdown">
-                <div className="aside-dropdown__inner"><span className="aside-dropdown__close">
-                    <svg className="icon">
-                    </svg></span>
-                    <div className="aside-dropdown__item d-lg-none d-block">
-                        <ul className="aside-menu">
-                            <li className="aside-menu__item aside-menu__item--has-child aside-menu__item--active"><a className="aside-menu__link" href="#"><span>Home</span></a>
-                                <ul className="aside-menu__sub-list">
-                                    <li><a href="../index.html"><span>01 Home Color Style</span></a></li>
-                                    <li><a href="../front_2.html"> <span>02 Home Color Style</span></a></li>
-                                    <li><a href="../front_3.html"><span>03 Home Color Style</span></a></li>
-                                    <li><a href="index.html"><span>04 Home Monochrome</span></a></li>
-                                    <li className="item--active"><a href="front_2.html"><span>05 Home Monochrome</span></a></li>
-                                    <li><a href="front_3.html"><span>06 Home Monochrome</span></a></li>
-                                </ul>
-                            </li>
-                            <li className="aside-menu__item aside-menu__item--has-child"><a className="aside-menu__link" href="#"><span>Pages</span></a>
-                                <ul className="aside-menu__sub-list">
-                                    <li><a href="about.html"><span>About</span></a></li>
-                                    <li><a href="typography.html"> <span>Typography</span></a></li>
-                                    <li><a href="donors.html"><span>Donors & Partners</span></a></li>
-                                    <li><a href="volunteer.html"><span>Become a Volunteer</span></a></li>
-                                    <li><a href="events.html"><span>Events</span></a></li>
-                                    <li><a href="event-details.html"><span>Event Details</span></a></li>
-                                    <li><a href="stories.html"><span>Stories</span></a></li>
-                                    <li><a href="storie-details.html"><span>Storie Details</span></a></li>
-                                    <li><a href="blog.html"><span>Blog</span></a></li>
-                                    <li><a href="blog-post.html"><span>Blog Post</span></a></li>
-                                    <li><a href="gallery.html"><span>Gallery</span></a></li>
-                                    <li><a href="pricing.html"><span>Pricing Plans</span></a></li>
-                                    <li><a href="faq.html"><span>FAQ</span></a></li>
-                                    <li><a href="404.html"><span>404 Page</span></a></li>
-                                </ul>
-                            </li>
-                            <li className="aside-menu__item aside-menu__item--has-child"><a className="aside-menu__link" href="#"><span>Causes</span></a>
-                                <ul className="aside-menu__sub-list">
-                                    <li><a href="causes.html"><span>Causes 1</span></a></li>
-                                    <li><a href="causes_2.html"> <span>Causes 2</span></a></li>
-                                    <li><a href="causes_3.html"><span>Causes 3</span></a></li>
-                                    <li><a href="cause-details.html"><span>Cause Details</span></a></li>
-                                </ul>
-                            </li>
-                            <li className="aside-menu__item aside-menu__item--has-child"><a className="aside-menu__link" href="#"><span>Shop</span></a>
-                                <ul className="aside-menu__sub-list">
-                                    <li><a href="shop.html"><span>Catalog Page</span></a></li>
-                                    <li><a href="shop-product.html"><span>Shop Product</span></a></li>
-                                    <li><a href="shop-cart.html"><span>Shop Cart</span></a></li>
-                                    <li><a href="shop-checkout.html"><span>Shop Checkout</span></a></li>
-                                    <li><a href="shop-account.html"><span>Shop Account</span></a></li>
-                                </ul>
-                            </li>
-
-                        </ul>
-                    </div>
-                    <div className="aside-dropdown__item">
-                        <ul className="aside-menu">
-                            <li className="aside-menu__item"><a className="aside-menu__link" href="#">Documents</a></li>
-                            <li className="aside-menu__item"><a className="aside-menu__link" href="#">Information</a></li>
-                            <li className="aside-menu__item"><a className="aside-menu__link" href="#">Additional Pages</a></li>
-                            <li className="aside-menu__item"><a className="aside-menu__link" href="#">Elements</a></li>
-                        </ul>
-                        <div className="aside-inner"><span className="aside-inner__title">Email</span><a className="aside-inner__link" href="mailto:support@helpo.org">support@helpo.org</a></div>
-                        <div className="aside-inner"><span className="aside-inner__title">Phone numbers</span><a className="aside-inner__link" href="tel:+180012345678">+ 1800 - 123 456 78</a><a className="aside-inner__link" href="tel:+18009756511">+ 1800 - 975 65 11</a></div>
-                        <ul className="aside-socials">
-                            <li className="aside-socials__item"><a className="aside-socials__link" href="#"><i className="fa fa-instagram" aria-hidden="true"></i></a></li>
-                            <li className="aside-socials__item"><a className="aside-socials__link" href="#"><i className="fa fa-google-plus" aria-hidden="true"></i></a></li>
-                            <li className="aside-socials__item"><a className="aside-socials__link aside-socials__link--active" href="#"><i className="fa fa-twitter" aria-hidden="true"></i></a></li>
-                            <li className="aside-socials__item"><a className="aside-socials__link" href="#"><i className="fa fa-facebook" aria-hidden="true"></i></a></li>
-                        </ul>
-                    </div>
-                    <div className="aside-dropdown__item"><a className="button button--squared" href="#"> <span>Donate</span></a></div>
-                </div>
-            </div>
-
             <header className="header header--front_2">
-                <div className="container-fluid">
-                    <div className="row no-gutters justify-content-between">
-                        <div className="col-auto d-flex align-items-center">
+                <div>
+                    <div style={{ marginLeft: -50 }} className="header-logo">
 
-                            <div style={{ marginRight: 30 }} className="header-logo">
+                        <Link to="/" href="">
+                            <img style={{ width: 150, height: 75 }} src={logo} alt="logo" />
 
-                                <Link to="/" className="header-logo__link" href="">
-                                    <img className="header-logo__img" src={logo} alt="logo" />
+                        </Link>
+                    </div>
+                </div>
 
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="col-auto">
+                <div className="container-fluid col-auto">
+                    <div className="row">
+
+                        <div className="col-auto" style={{ paddingRight: 100, marginLeft: -120 }}>
                             <nav>
                                 <ul className="main-menu">
-                                    <li className="main-menu__item main-menu__item--has-child "><a className="main-menu__link" href="#"><span>Home</span></a>
+                                    <li className="main-menu__item main-menu__item--has-child ">
+                                        <Link className="main-menu__link" style={{ color: "black", textDecoration: 'none' }} to={user && user.role === "Admin" ? "/admin" : "/"}>
+                                            Home
+                                        </Link>
                                     </li>
+
                                     <li className="main-menu__item main-menu__item--has-child">
-                                        <span> <Link className="main-menu__link" style={{ color: "black", textDecoration: 'none' }} to="/post">
+                                        <Link className="main-menu__link" style={{ color: "black", textDecoration: 'none' }} to="/post">
                                             Post
-                                        </Link></span>
+                                        </Link>
                                     </li>
 
-                                    <li className="main-menu__item main-menu__item--has-child">
-                                        {user && user.role === "Organization" && organization.organization !== null && (
-                                               
-                                                    <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/organization/${organizationId}`}>
-                                                        <i className="fas fa-building"></i>
-                                                        My Projects
-                                                    </Link>
-                                               
-                                            )}
 
-                                 
-                                        
-                                    </li>
+                                    {user && user.role === "Organization" && organization.organization !== null && (
+                                        <li className="main-menu__item main-menu__item--has-child">
+                                            <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/organization/${organizationId}`}>
+                                                My Projects
+                                            </Link>
+                                        </li>
+                                    )}
+
                                     <li className="main-menu__item main-menu__item--has-child">
-                    <span>
-                      {" "}
-                      <Link
-                        className="main-menu__link"
-                        style={{ color: "black", textDecoration: "none" }}
-                        to="/forum"
-                      >
-                        Forum
-                      </Link>
-                    </span>
-                  </li>
+                                        <Link
+                                            className="main-menu__link"
+                                            style={{ color: "black", textDecoration: "none" }}
+                                            to="/forum"
+                                        >
+                                            Forum
+                                        </Link>
+                                    </li>
                                     <li className="main-menu__item main-menu__item--has-child">
                                         {user && user.role === "Volunteer" && (
-                                               
-                                                    <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/completed`}>
-                                                        <i className="fas fa-building"></i>
-                                                        Completed Projects
-                                                    </Link>
-                                               
-                                            )}
-
-                                 
-                                        
+                                            <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/completed`}>
+                                                Completed Projects
+                                            </Link>
+                                        )}
                                     </li>
                                 </ul>
                             </nav>
                         </div>
-                        <div className="col-auto d-flex align-items-center">
-                            <ul className="lang-select">
-                                <li className="lang-select__item lang-select__item--active"><span>En</span>
-                                    <ul className="lang-select__sub-list">
-                                        <li><a href="#">French</a></li>
-                                        <li><a href="#">Spanish</a></li>
-                                        <li><a href="#">Deutsch</a></li>
-                                        <li><a href="#">Russian</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+
+                        <div className="d-flex align-items-center" style={{ marginInlineEnd: -405 }}>
 
                             {/* Notification Bell added here */}
-                            {user && user.role!=='Guest' &&(
+                            {user && user.role !== 'Guest' && (
                                 <>
-                                    <div className="notification-wrapper" style={{ marginRight: 15 }}>
+                                    <div className="notification-wrapper" style={{ marginRight: 25 }}>
                                         <NotificationBell />
                                     </div>
                                     <Link
                                         className="main-menu__link"
-                                        style={{ color: "black", textDecoration: "none", display: "flex", alignItems: "center" }}
+                                        style={{ color: "black", textDecoration: "none", display: "flex", alignItems: "center", paddingRight: 60 }}
                                         to="/chat"
                                     >
                                         <div>
@@ -213,7 +107,7 @@ const Header2 = () => {
                             )}
 
                             {user ? (<>
-                                <span className="button button--squared">
+                                <span className="button button--squared" style={{ height: 45, width: 100 }}>
                                     <Link
                                         style={{
                                             color: "black",
@@ -250,31 +144,21 @@ const Header2 = () => {
                                     </Link>
                                 </span>
 
-                                <div className="button button--squared">
-                                    <Link style={{ color: "black" }} onClick={handleLogOut}>
+                                <div className="button button--squared" style={{ height: 45, width: 100 }}>
+                                    <Link style={{ color: "black", textDecoration: 'none' }} onClick={handleLogOut}>
                                         Log Out
                                     </Link>
                                 </div>
-
-
                             </>
-
-
                             ) : (<>
-                                <span className="button button--squared">
-                                    <div><Link style={{ color: "black" }} to="/login" >Sign In</Link></div>
-
+                                <span className="button button--squared" style={{ height: 45, width: 100 }}>
+                                    <div><Link style={{ color: "black", textDecoration: 'none' }} to="/login" >Sign In</Link></div>
                                 </span>
-                                <span className="button button--squared">
-                                    <div><Link style={{ color: "black" }} to="/register" >Sign Up</Link></div>
+                                <span className="button button--squared" style={{ height: 45, width: 100 }}>
+                                    <div><Link style={{ color: "black", textDecoration: 'none' }} to="/register" >Sign Up</Link></div>
                                 </span>
                             </>
-
                             )}
-
-                            <div className="dropdown-trigger d-block d-sm-none">
-                                <div className="dropdown-trigger__item"></div>
-                            </div>
                         </div>
                     </div>
                 </div>

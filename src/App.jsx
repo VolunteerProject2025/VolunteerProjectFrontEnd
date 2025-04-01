@@ -8,6 +8,8 @@ import { ProjectProvider } from './context/ProjectContext';
 import { NotificationProvider } from "./context/NotificationContext";
 import { Profile } from './pages/Profile';
 import { ChangePassword } from './pages/ChangePassword';
+import { Certificate } from './pages/Certificate';
+
 import { CompletedProjects } from './pages/CompletedProjects';
 import Topic from "./pages/Topic";
 import NewThreadPage from "./pages/NewThread";
@@ -87,6 +89,13 @@ function App() {
                           <Route path='/change-password' element={
                                     <PrivateRoute>
                                         <Layout2><ChangePassword /></Layout2>
+                                    </PrivateRoute>
+                                } />
+                                <Route path='/certificate' element={
+                                    <PrivateRoute
+                                    allowedRoles={['Volunteer']}
+                                    >
+                                        <Layout2><Certificate /></Layout2>
                                     </PrivateRoute>
                                 } />
                                 <Route path='/projects/completed' element={

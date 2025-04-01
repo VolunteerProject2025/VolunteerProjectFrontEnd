@@ -71,6 +71,22 @@ export function CompletedProjects ()  {
         });
     };
 
+    // Handle navigation to certificate page
+    const navigateToCertificate = (project) => {
+        console.log('Name',project.volunteerFullName);
+        
+        // Navigate to Certificate page with project and user information
+        navigate('/certificate', { 
+            state: { 
+                project: project,
+                projectTitle: project.title,
+                organizationName: project.organization?.name || "Volunteer Organization",
+                completionDate: formatDate(project.endDate),
+                 volunteerName: project.volunteerFullName || ""
+            } 
+        });
+    };
+
     // Handle feedback submission
     const handleSubmitFeedback = async (e) => {
         e.preventDefault();
@@ -195,12 +211,20 @@ export function CompletedProjects ()  {
                                                     <span>{formatDate(project.endDate)}</span>
                                                 </div>
                                             </div>
-                                            <button 
-                                                className="btn btn-view-details" 
-                                                onClick={() => handleOpenFeedbackModal(project)}
-                                            >
-                                                Feed Back
-                                            </button>
+                                            <div className="project-actions d-flex">
+                                                <button 
+                                                    className="btn btn-view-details me-2" 
+                                                    onClick={() => handleOpenFeedbackModal(project)}
+                                                >
+                                                    <i className="fas fa-comment-dots me-1"></i> Feedback
+                                                </button>
+                                                <button 
+                                                    className="btn btn-certificate" 
+                                                    onClick={() => navigateToCertificate(project)}
+                                                >
+                                                    <i className="fas fa-certificate me-1"></i> Certificate
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

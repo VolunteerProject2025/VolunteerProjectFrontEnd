@@ -126,6 +126,8 @@ export function ProjectDetails() {
   };
 
   const handleReject = async (volunteerId, projectId) => {
+    const isConfirmed = window.confirm("Are you sure you want to rejected this volunteer?");
+    if (!isConfirmed) return;
     try {
       await rejectVolunteerToProject(volunteerId, projectId);
 
@@ -137,7 +139,44 @@ export function ProjectDetails() {
       console.log(error);
     }
   };
+  const handleCompleteProject = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to approve this volunteer?");
+    if (!isConfirmed) return;
+    try {
+        if (!project) {
+            console.error("No project data available");
+            return;
+        }
+        // Make sure the current project is the one we want to update
+        if (project.data._id) {
+            const updatedProject = { ...project, status: "Completed" };
 
+            // Update the UI first
+            setProject(updatedProject);
+
+            // Send the update request to the server
+            const response = await fetch(`http://localhost:3000/projects/completed/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "Completed" }),
+              
+            });
+            console.log(response);
+            
+            if (!response.ok) {
+                throw new Error("Failed to complete project");
+            }
+
+            // Alert success and confirm
+            alert("Project marked as Completed!");
+        } else {
+            console.error("Project ID not found");
+        }
+    } catch (error) {
+        console.error("Error completing project:", error);
+        alert("Failed to update project status.");
+    }
+};
   const handleApprove = async (volunteerId, projectId) => {
     try {
       await approveVolunteerToProject(volunteerId, projectId);
@@ -266,6 +305,7 @@ export function ProjectDetails() {
                   <>
                     <button className="project-btn btn-edit" onClick={() => navigate(`/projects/${id}/edit`)}> Edit</button>
                     <button className="project-btn btn-delete" onClick={handleDeleteProject}> Delete</button>
+                    <button className="project-btn btn-delete" onClick={handleCompleteProject}>Completed</button>
                   </>
                 ) : user?.role === "Volunteer" ? (
                   <button
