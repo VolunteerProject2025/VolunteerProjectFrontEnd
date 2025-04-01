@@ -142,14 +142,33 @@ const Header2 = () => {
                                             )}
 
                                  
-                                        <ul className="main-menu__sub-list">
-
-                                           
-                                       
-
-                                        </ul>
+                                        
                                     </li>
+                                    <li className="main-menu__item main-menu__item--has-child">
+                    <span>
+                      {" "}
+                      <Link
+                        className="main-menu__link"
+                        style={{ color: "black", textDecoration: "none" }}
+                        to="/forum"
+                      >
+                        Forum
+                      </Link>
+                    </span>
+                  </li>
+                                    <li className="main-menu__item main-menu__item--has-child">
+                                        {user && user.role === "Volunteer" && (
+                                               
+                                                    <Link className="main-menu__link" style={{ color: "black" }} to={`/projects/completed`}>
+                                                        <i className="fas fa-building"></i>
+                                                        Completed Projects
+                                                    </Link>
+                                               
+                                            )}
 
+                                 
+                                        
+                                    </li>
                                 </ul>
                             </nav>
                         </div>

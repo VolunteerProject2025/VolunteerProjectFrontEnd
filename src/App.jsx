@@ -8,6 +8,11 @@ import { ProjectProvider } from './context/ProjectContext';
 import { NotificationProvider } from "./context/NotificationContext";
 import { Profile } from './pages/Profile';
 import { ChangePassword } from './pages/ChangePassword';
+import { CompletedProjects } from './pages/CompletedProjects';
+import Topic from "./pages/Topic";
+import NewThreadPage from "./pages/NewThread";
+import DiscussionsPage from "./pages/Discussion";
+import ThreadDetailPage from "./pages/ThreadDetailPage";
 import PrivateRoute from './context/PrivateRoute'; // Import the PrivateRoute component
 import { Unauthorized } from './pages/Unauthorized';
 import { ForgotPassword } from "./pages/ForgotPassword";
@@ -78,9 +83,17 @@ function App() {
                                         <Layout2><PostForm /></Layout2>
                                     </PrivateRoute>
                                 } />
-                                <Route path='/change-password' element={
+                          
+                          <Route path='/change-password' element={
                                     <PrivateRoute>
                                         <Layout2><ChangePassword /></Layout2>
+                                    </PrivateRoute>
+                                } />
+                                <Route path='/projects/completed' element={
+                                    <PrivateRoute
+                                    allowedRoles={['Volunteer']}
+                                    >
+                                        <Layout2><CompletedProjects /></Layout2>
                                     </PrivateRoute>
                                 } />
                                 <Route path="/projects/organization/:organizationId" element={
@@ -159,7 +172,46 @@ function App() {
                                 <Route path='/admin/feedbacks' element={<PrivateRoute allowedRoles={['Admin']}><AdminLayout><FeedbacksManagements /></AdminLayout></PrivateRoute>} />
                                 <Route path='/admin/pendingOrg' element={<PrivateRoute allowedRoles={['Admin']}><AdminLayout><ApproveOrganization /></AdminLayout></PrivateRoute>} />
                                 <Route path='/admin/pendingProjects' element={<PrivateRoute allowedRoles={['Admin']}><AdminLayout><PendingProjects /></AdminLayout></PrivateRoute>} />
-
+                                <Route
+                  path="/forum"
+                  element={
+                    <PrivateRoute>
+                      <Layout2>
+                        <Topic></Topic>
+                      </Layout2>
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/forum/new-thread"
+                  element={
+                    <PrivateRoute>
+                      <Layout2>
+                       <NewThreadPage/>
+                      </Layout2>
+                    </PrivateRoute>
+                  }
+                />
+                 <Route
+                  path="/forum/discussion"
+                  element={
+                    <PrivateRoute>
+                      <Layout2>
+                       <DiscussionsPage/>
+                      </Layout2>
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/forum/thread/detail"
+                  element={
+                    <PrivateRoute>
+                      <Layout2>
+                       <ThreadDetailPage/>
+                      </Layout2>
+                    </PrivateRoute>
+                  }
+                />
                             </Routes>
                         </HashRouter>
                     </NotificationProvider>
