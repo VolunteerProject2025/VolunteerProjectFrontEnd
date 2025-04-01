@@ -11,8 +11,7 @@ const getInitials = (name) => {
 // Modified ChatItem to handle group chats
 const ChatItem = ({ chat, user, onClick }) => {
     const { recipientUser } = useFetchRecipientUser(chat, user);
-    const { onlineUsers} = useContext(ChatContext);
-    const [lastMessage, setLastMessage] = useState(null);
+    const { onlineUsers, messages} = useContext(ChatContext);
     // Determine if this is a group chat
     const isGroupChat = chat.isGroupChat || false;
     
@@ -22,27 +21,17 @@ const ChatItem = ({ chat, user, onClick }) => {
     // For group chats, we can't show online status of a single user
     const isOnline = !isGroupChat && onlineUsers?.some((user) => user?.userId === recipientUser?._id);
 
-    useEffect(() => {
-        const fetchLastMessage = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/message/${chat._id}`, { credentials: "include" });
-                const messages = await response.json();
-                if (messages.length > 0) {
-                    setLastMessage(messages[messages.length - 1]);
-                }
-            } catch (error) {
-                console.error("Error fetching last message:", error);
-            }
-        };
+    const lastMessage = messages?.filter(msg => msg.chatId === chat._id)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
-        fetchLastMessage();
-    }, [chat]);
-    
-    // Get the last message for the chat preview
+    // Get message preview
     const messagePreview = lastMessage ?
         (lastMessage.text.length > 25 ? lastMessage.text.substring(0, 25) + "..." : lastMessage.text) :
         "No messages yet";
+    
+    // Format timestamp
     const formattedTime = lastMessage ? moment(lastMessage.createdAt).calendar() : "";
+
 
     // Check if there are unread messages (implement your own logic)
     const hasUnreadMessages = false; // Replace with your logic

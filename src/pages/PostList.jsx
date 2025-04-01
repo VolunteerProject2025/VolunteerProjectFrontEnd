@@ -1,51 +1,47 @@
 import { useEffect, useState, useContext } from 'react';
-import { getPosts, deletePost, likePost, addComment } from '../hooks/postService';
+import { getPosts, deletePost, likePost, addComment, editComment, deleteComment } from '../hooks/postService';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaClock, FaMapMarkerAlt, FaHeart, FaShare, FaComment, FaEllipsisV, FaTrash } from 'react-icons/fa';
+import { FaClock, FaMapMarkerAlt, FaHeart, FaShare, FaComment, FaEllipsisV, FaTrash, FaEdit } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { FacebookShareButton, TwitterShareButton, FacebookIcon, TwitterIcon } from 'react-share';
+import { TwitterShareButton, TwitterIcon, FacebookIcon } from 'react-share';
 import { AuthContext } from '../context/AuthContext';
 import '../assets/css/events.css';
 
 export function PostList() {
     const [posts, setPosts] = useState([]);
     const [commentInput, setCommentInput] = useState({});
+    const [editingComment, setEditingComment] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [menuOpen, setMenuOpen] = useState(null);
+    const [commentMenuOpen, setCommentMenuOpen] = useState(null);
     const [showComments, setShowComments] = useState({});
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const currentUserId = user?._id || null;
+    const userRole = user?.role || 'Guest';
 
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            console.log('Fetching posts, user:', user);
             try {
                 const result = await getPosts();
-                console.log('Posts fetched successfully:', result.data);
                 setPosts(Array.isArray(result.data) ? result.data : []);
             } catch (err) {
                 console.error('Error fetching posts:', err);
-                console.log('Error response:', err.response?.status, err.response?.data);
                 if (err.response?.status === 401 || err.response?.status === 403) {
-                    console.log('Unauthorized detected, but not redirecting yet for debugging');
                     setError('Please log in to view posts');
-                    // Tạm thời comment để ngăn navigate
-                    // navigate('/login');
                 } else {
                     setError(err.response?.data?.message || 'Failed to load posts');
                 }
                 setPosts([]);
             } finally {
                 setLoading(false);
-                console.log('Fetch completed, loading:', false, 'error:', error);
             }
         };
         fetchPosts();
-    }, [navigate, user]); // Thêm user vào dependency để theo dõi trạng thái đăng nhập
+    }, [navigate, user]);
 
     const loadPosts = async () => {
         setLoading(true);
@@ -62,6 +58,10 @@ export function PostList() {
     };
 
     const handleDelete = async (id) => {
+        if (userRole !== 'Organization') {
+            alert('Only users with the Organization role can delete posts.');
+            return;
+        }
         try {
             await deletePost(id);
             await loadPosts();
@@ -88,13 +88,7 @@ export function PostList() {
         }
     };
 
-    const handleShare = (postId) => {
-        const shareUrl = `${window.location.origin}/post/${postId}`;
-        navigator.clipboard.writeText(shareUrl);
-        alert('Link copied to clipboard!');
-    };
-
-    const handleComment = async (postId) => {
+    const handleComment = async (postId, parentId = null) => {
         if (!commentInput[postId]) {
             alert('Please enter a comment.');
             return;
@@ -108,7 +102,8 @@ export function PostList() {
         try {
             const response = await addComment(postId, { 
                 content: commentInput[postId], 
-                userId: currentUserId 
+                userId: currentUserId,
+                parentId
             });
             setPosts(posts.map(post => 
                 post._id === postId ? response.data : post
@@ -117,6 +112,47 @@ export function PostList() {
             setShowComments({ ...showComments, [postId]: true });
         } catch (error) {
             alert('Failed to add comment: ' + (error.response?.data?.message || 'Unknown error'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditComment = (postId, commentId, content) => {
+        setEditingComment({ postId, commentId, content });
+        setCommentInput({ ...commentInput, [commentId]: content }); // Sử dụng commentId làm key để lưu nội dung chỉnh sửa
+        setCommentMenuOpen(null);
+    };
+
+    const handleSaveEditComment = async (postId, commentId) => {
+        if (!commentInput[commentId]) {
+            alert('Please enter some content to save.');
+            return;
+        }
+        setLoading(true);
+        try {
+            const response = await editComment(postId, commentId, { content: commentInput[commentId] });
+            setPosts(posts.map(post => 
+                post._id === postId ? response.data : post
+            ));
+            setEditingComment(null);
+            setCommentInput({ ...commentInput, [commentId]: '' });
+        } catch (error) {
+            alert('Failed to edit comment: ' + (error.response?.data?.message || 'Unknown error'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteComment = async (postId, commentId) => {
+        setLoading(true);
+        try {
+            const response = await deleteComment(postId, commentId);
+            setPosts(posts.map(post => 
+                post._id === postId ? response.data : post
+            ));
+            setCommentMenuOpen(null);
+        } catch (error) {
+            alert('Failed to delete comment: ' + (error.response?.data?.message || 'Unknown error'));
         } finally {
             setLoading(false);
         }
@@ -135,29 +171,129 @@ export function PostList() {
         setMenuOpen(prev => (prev === postId ? null : postId));
     };
 
-    console.log('Rendering PostList, loading:', loading, 'error:', error, 'posts length:', posts.length);
+    const toggleCommentMenu = (commentId) => {
+        setCommentMenuOpen(prev => (prev === commentId ? null : commentId));
+    };
+
+    const renderComments = (comments, postId, parentId = null, level = 0) => {
+        return comments
+            .filter(comment => (comment.parentId ? comment.parentId.toString() : null) === parentId)
+            .map(comment => (
+                <div key={comment._id} className={`comment level-${level}`}>
+                    {level > 0 && <div className="comment-connector"></div>}
+                    <img
+                        src={comment.author?.avatar || 'https://via.placeholder.com/40'}
+                        alt="Avatar"
+                        className="comment-avatar"
+                    />
+                    <div className="comment-content">
+                        <div className="comment-header">
+                            <p className="comment-author">
+                                {comment.author?.fullName || 'Unknown User'}
+                            </p>
+                            {(comment.author?._id === currentUserId || userRole === 'Organization') && (
+                                <div className="comment-menu">
+                                    <button
+                                        className="comment-menu-button"
+                                        onClick={() => toggleCommentMenu(comment._id)}
+                                    >
+                                        <FaEllipsisV />
+                                    </button>
+                                    {commentMenuOpen === comment._id && (
+                                        <div className="comment-dropdown-menu">
+                                            {comment.author?._id === currentUserId && (
+                                                <button
+                                                    className="dropdown-item"
+                                                    onClick={() => handleEditComment(postId, comment._id, comment.content)}
+                                                >
+                                                    <FaEdit /> Edit
+                                                </button>
+                                            )}
+                                            {(comment.author?._id === currentUserId || userRole === 'Organization') && (
+                                                <button
+                                                    className="dropdown-item"
+                                                    onClick={() => handleDeleteComment(postId, comment._id)}
+                                                >
+                                                    <FaTrash /> Delete
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                        {editingComment?.commentId === comment._id ? (
+                            <div className="edit-comment-form">
+                                <input
+                                    type="text"
+                                    value={commentInput[comment._id] || ''}
+                                    onChange={(e) => setCommentInput({ ...commentInput, [comment._id]: e.target.value })}
+                                    placeholder="Edit your comment..."
+                                    className="edit-comment-input"
+                                    autoFocus
+                                />
+                                <div className="edit-comment-actions">
+                                    <button
+                                        onClick={() => handleSaveEditComment(postId, comment._id)}
+                                        className="save-edit-button"
+                                        disabled={loading}
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={() => setEditingComment(null)}
+                                        className="cancel-edit-button"
+                                        disabled={loading}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <p className="comment-text">{comment.content}</p>
+                                <div className="comment-footer">
+                                    <button
+                                        onClick={() => handleReply(postId, comment._id, comment.author?.fullName)}
+                                        className="reply-button"
+                                    >
+                                        Reply
+                                    </button>
+                                    <p className="comment-time">
+                                        {comment.relativeTime || new Date(comment.createdAt).toLocaleTimeString()}
+                                    </p>
+                                </div>
+                            </>
+                        )}
+                        {renderComments(comments, postId, comment._id, level + 1)}
+                    </div>
+                </div>
+            ));
+    };
 
     return (
         <main className="main post-list">
             <section className="events-inner">
                 <div className="container">
-                    {console.log('Rendering Add Post button')}
-                    <div style={{ marginBottom: '20px' }}>
-                        <Link
-                            to="/add"
-                            style={{
-                                display: 'inline-block',
-                                padding: '10px 20px',
-                                backgroundColor: '#2563eb',
-                                color: 'white',
-                                textDecoration: 'none',
-                                borderRadius: '5px',
-                                fontSize: '16px'
-                            }}
-                        >
-                            Add Post
-                        </Link>
-                    </div>
+                    {userRole === 'Organization' && (
+                        <div className="add-post" style={{ marginBottom: '20px', display: 'block !important' }}>
+                            <Link 
+                                to="/add" 
+                                className="button button-primary"
+                                style={{
+                                    display: 'inline-block !important',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#2563eb',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderRadius: '5px',
+                                    fontSize: '16px'
+                                }}
+                            >
+                                Add Post
+                            </Link>
+                        </div>
+                    )}
 
                     {loading && (
                         <div className="loading-overlay">
@@ -171,7 +307,7 @@ export function PostList() {
                             <p>{error}</p>
                             <button 
                                 onClick={() => window.location.reload()} 
-                                style={{ padding: '8px 16px', backgroundColor: '#2563eb', color: 'white' }}
+                                className="button button-primary"
                             >
                                 Reload Page
                             </button>
@@ -182,137 +318,152 @@ export function PostList() {
                         <p className="no-posts">No posts available.</p>
                     ) : (
                         <div className="posts-grid">
-                            {posts.map(post => (
-                                <div key={post._id} className="post-card">
-                                    <div className="post-header">
-                                        <div className="post-date">
-                                            <span>{new Date(post.createdAt).getDate()}</span>
-                                            <span>{new Date(post.createdAt).toLocaleString('default', { month: 'short', year: '2-digit' })}</span>
-                                        </div>
-                                        <div className="post-menu">
-                                            <button 
-                                                className="menu-button" 
-                                                onClick={() => toggleMenu(post._id)}
-                                            >
-                                                <FaEllipsisV />
-                                            </button>
-                                            {menuOpen === post._id && (
-                                                <div 
-                                                    className="dropdown-menu" 
-                                                    style={{ 
-                                                        position: 'absolute', 
-                                                        top: '100%', 
-                                                        right: '0', 
-                                                        display: 'block'
-                                                    }}
+                            {posts.map(post => {
+                                const shareUrl = `${window.location.origin}/post/${post._id}`;
+                                const shareTitle = post.title || 'Untitled Post';
+                                const shareDescription = post.content || 'No content available';
+                                const shareImage = post.image ? `http://localhost:3000${post.image}` : 'https://via.placeholder.com/200';
+                                const hashtags = [
+                                    'Volunteer',
+                                    'Event',
+                                    'Community',
+                                    post.organization?.name || 'Org'
+                                ].filter(Boolean);
+
+                                const shareContent = `${shareTitle} - ${shareDescription} ${shareUrl} ${hashtags.map(h => `#${h}`).join(' ')}`;
+
+                                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}"e=${encodeURIComponent(shareContent)}`;
+                                console.log('Facebook Share URL:', facebookShareUrl);
+
+                                const twitterShareContent = shareContent.length > 280 
+                                    ? `${shareTitle} - ${shareDescription.substring(0, 200)}... ${shareUrl}` 
+                                    : shareContent;
+                                console.log('Twitter Share Content:', twitterShareContent);
+
+                                return (
+                                    <div key={post._id} className="post-card">
+                                        <div className="post-header">
+                                            <div className="post-date">
+                                                <span>{new Date(post.createdAt).getDate()}</span>
+                                                <span>{new Date(post.createdAt).toLocaleString('default', { month: 'short', year: '2-digit' })}</span>
+                                            </div>
+                                            <div className="post-menu">
+                                                <button 
+                                                    className="menu-button" 
+                                                    onClick={() => toggleMenu(post._id)}
                                                 >
-                                                    <button 
-                                                        className="dropdown-item" 
-                                                        onClick={() => handleDelete(post._id)}
+                                                    <FaEllipsisV />
+                                                </button>
+                                                {menuOpen === post._id && userRole === 'Organization' && (
+                                                    <div 
+                                                        className="dropdown-menu" 
+                                                        style={{ 
+                                                            position: 'absolute', 
+                                                            top: '100%', 
+                                                            right: '0', 
+                                                            display: 'block'
+                                                        }}
                                                     >
-                                                        <FaTrash /> Move to Trash
+                                                        <button 
+                                                            className="dropdown-item" 
+                                                            onClick={() => handleDelete(post._id)}
+                                                        >
+                                                            <FaTrash /> Move to Trash
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <img
+                                            className="post-image"
+                                            src={shareImage}
+                                            alt={shareTitle}
+                                            loading="lazy"
+                                        />
+                                        <div className="post-content">
+                                            <h6 className="post-title">
+                                                <Link to={`/edit/${post._id}`}>{shareTitle}</Link>
+                                            </h6>
+                                            <p className="post-excerpt" style={{ whiteSpace: 'pre-wrap' }}>
+                                                {shareDescription}
+                                            </p>
+                                            <div className="post-details">
+                                                <p><FaClock /> {post.organization?.name || 'Unknown'}</p>
+                                                <p><FaMapMarkerAlt /> {post.author?.fullName || 'Unknown'}</p>
+                                            </div>
+                                            <div className="post-actions">
+                                                <motion.button
+                                                    onClick={() => handleLike(post._id)}
+                                                    className="action-button like-button"
+                                                    style={{ color: post.likes.includes(currentUserId) ? '#e0245e' : '#6b7280' }}
+                                                    whileTap={{ scale: 1.2 }}
+                                                >
+                                                    <FaHeart /> <span>{post.likes.length}</span>
+                                                </motion.button>
+                                                <div className="share-container">
+                                                    <button 
+                                                        className="action-button share-button"
+                                                        onClick={(e) => e.preventDefault()}
+                                                    >
+                                                        <FaShare /> <span>Share</span>
                                                     </button>
+                                                    <div className="share-options">
+                                                        <button
+                                                            onClick={() => {
+                                                                console.log('Opening Facebook Share:', facebookShareUrl);
+                                                                window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+                                                            }}
+                                                        >
+                                                            <FacebookIcon size={32} round />
+                                                        </button>
+                                                        <TwitterShareButton
+                                                            url={shareUrl}
+                                                            title={twitterShareContent}
+                                                            beforeOnClick={() => {
+                                                                console.log('Sharing to Twitter:', { url: shareUrl, title: twitterShareContent });
+                                                                return Promise.resolve();
+                                                            }}
+                                                            onShareWindowClose={() => console.log('Twitter share window closed')}
+                                                        >
+                                                            <TwitterIcon size={32} round />
+                                                        </TwitterShareButton>
+                                                    </div>
+                                                </div>
+                                                <button 
+                                                    className="action-button"
+                                                    onClick={() => toggleComments(post._id)}
+                                                >
+                                                    <FaComment /> <span>{post.comments.length}</span>
+                                                </button>
+                                            </div>
+                                            {showComments[post._id] && (
+                                                <div className="comments-section">
+                                                    {post.comments && post.comments.length > 0 ? (
+                                                        renderComments(post.comments, post._id)
+                                                    ) : (
+                                                        <p className="no-comments">No comments yet.</p>
+                                                    )}
+                                                    <div className="comment-input">
+                                                        <input
+                                                            type="text"
+                                                            value={commentInput[post._id] || ''}
+                                                            onChange={(e) => setCommentInput({ ...commentInput, [post._id]: e.target.value })}
+                                                            placeholder="Write a comment..."
+                                                        />
+                                                        <button
+                                                            onClick={() => handleComment(post._id)}
+                                                            className="button button-primary"
+                                                            disabled={loading}
+                                                        >
+                                                            Comment
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
                                     </div>
-                                    <img
-                                        className="post-image"
-                                        src={post.image ? `http://localhost:3000${post.image}` : 'img/event_4.jpg'}
-                                        alt={post.title}
-                                        loading="lazy"
-                                    />
-                                    <div className="post-content">
-                                        <h6 className="post-title">
-                                            <Link to={`/edit/${post._id}`}>{post.title}</Link>
-                                        </h6>
-                                        <p className="post-excerpt" style={{ whiteSpace: 'pre-wrap' }}>
-                                            {post.content}
-                                        </p>
-                                        <div className="post-details">
-                                            <p><FaClock /> {post.organization?.name || 'Unknown'}</p>
-                                            <p><FaMapMarkerAlt /> {post.author?.fullName || 'Unknown'}</p>
-                                        </div>
-                                        <div className="post-actions">
-                                            <motion.button
-                                                onClick={() => handleLike(post._id)}
-                                                className="action-button like-button"
-                                                style={{ color: post.likes.includes(currentUserId) ? '#e0245e' : '#6b7280' }}
-                                                whileTap={{ scale: 1.2 }}
-                                            >
-                                                <FaHeart /> <span>{post.likes.length}</span>
-                                            </motion.button>
-                                            <button 
-                                                onClick={() => handleShare(post._id)}
-                                                className="action-button"
-                                            >
-                                                <FaShare /> <span>Share</span>
-                                            </button>
-                                            <div className="share-buttons">
-                                                <FacebookShareButton url={`${window.location.origin}/post/${post._id}`} quote={post.title}>
-                                                    <FacebookIcon size={32} round />
-                                                </FacebookShareButton>
-                                                <TwitterShareButton url={`${window.location.origin}/post/${post._id}`} title={post.title}>
-                                                    <TwitterIcon size={32} round />
-                                                </TwitterShareButton>
-                                            </div>
-                                            <button 
-                                                className="action-button"
-                                                onClick={() => toggleComments(post._id)}
-                                            >
-                                                <FaComment /> <span>{post.comments.length}</span>
-                                            </button>
-                                        </div>
-                                        {showComments[post._id] ? (
-                                            <div className="comments-section">
-                                                {post.comments && post.comments.length > 0 ? (
-                                                    post.comments.map(comment => (
-                                                        <div key={comment._id} className="comment">
-                                                            <img
-                                                                src={comment.author?.avatar || 'https://via.placeholder.com/40'}
-                                                                alt="Avatar"
-                                                                className="comment-avatar"
-                                                            />
-                                                            <div className="comment-content">
-                                                                <p className="comment-author">
-                                                                    {comment.author?.fullName || 'Unknown User'}
-                                                                </p>
-                                                                <p>{comment.content}</p>
-                                                                <p className="comment-time">
-                                                                    {comment.relativeTime || new Date(comment.createdAt).toLocaleTimeString()}
-                                                                </p>
-                                                                <button
-                                                                    onClick={() => handleReply(post._id, comment._id, comment.author?.fullName)}
-                                                                    className="reply-button"
-                                                                >
-                                                                    Reply
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <p className="no-comments">No comments yet.</p>
-                                                )}
-                                                <div className="comment-input">
-                                                    <input
-                                                        type="text"
-                                                        value={commentInput[post._id] || ''}
-                                                        onChange={(e) => setCommentInput({ ...commentInput, [post._id]: e.target.value })}
-                                                        placeholder="Write a comment..."
-                                                    />
-                                                    <button
-                                                        onClick={() => handleComment(post._id)}
-                                                        className="button button-primary"
-                                                        disabled={loading}
-                                                    >
-                                                        Comment
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : null}
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>

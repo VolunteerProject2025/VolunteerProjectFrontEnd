@@ -1,48 +1,171 @@
-.project-container {
-    margin-top: 80px;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  /* Cột trái - Thông tin dự án */
-  .project-details {
-    width: 45%;
-    padding: 20px;
-    border: 3px solid #ddd;
-    border-radius: 10px;
-    background: #f9f9f9;
-  }
-  
-  .project-image-container {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .project-image {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    border-radius: 10px;
-  }
-  
-  /* Cột phải - Danh sách lịch trình */
-  .project-schedule {
-    width: 45%;
-    padding: 20px;
-    border: 3px solid #ddd;
-    border-radius: 10px;
-    background: #f9f9f9;
-  }
-  
-  .schedule-item {
-    margin-top: 10px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .tieude {
-font-weight: bolder;
-  }
-  
+/* Card chứa toàn bộ nội dung */
+.project-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: #e3e0e0;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+/* Hình ảnh bên trái */
+.project-image-container {
+  flex: 1.5;
+  max-width: 500px;
+}
+
+.project-image {
+  width: 100%; /* Ảnh sẽ luôn chiếm 100% chiều rộng của container */
+  aspect-ratio: 1 / 1; /* Đảm bảo hình ảnh luôn là hình vuông */
+  object-fit: cover; /* Cắt ảnh để vừa khung nhưng không méo */
+  border-radius: 12px; /* Bo góc nhẹ để ảnh trông đẹp hơn */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Thông tin dự án bên phải */
+.project-info {
+  flex: 2;
+  background-color: #fbfbfb;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+/* Dòng thông tin */
+.detail-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.detail-row p {
+  margin: 0;
+}
+
+/* Tiêu đề */
+.tieude {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Nhóm nút */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Button chung */
+.project-btn {
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Nút sửa */
+.btn-edit {
+  background-color: #354463;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #354463;
+  transform: scale(1.05);
+}
+
+/* Nút xóa */
+.btn-delete {
+  background-color: #354463;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #354463;
+  transform: scale(1.05);
+}
+
+.btn-complete {
+  background-color: #354463;
+  color: white;
+}
+.btn-delete:hover {
+  background-color: #354463;
+  transform: scale(1.05);
+}
+.project-schedule{
+margin: 50px;
+}
+/* Bảng lịch trình */
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.schedule-table th,
+.schedule-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.schedule-table th {
+  background: #007bff;
+  color: white;
+}
+
+/* Hàng bảng theo trạng thái */
+.status-pending { background: #fffbe6; }
+.status-in-progress { background: #e6f7ff; }
+.status-completed { background: #e6ffe6; }
+
+/* Badge trạng thái */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.status-badge.pending { background: #ffc107; color: black; }
+.status-badge.in-progress { background: #17a2b8; color: white; }
+.status-badge.completed { background: #28a745; color: white; }
+
+/* Nút hành động */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-warning { background: #ffc107; color: black; }
+.btn-danger { background: #dc3545; color: white; }
+.btn-success { background: #28a745; color: white; }
+.btn-primary { background: #007bff; color: white; }
+.btn-secondary { background: #6c757d; color: white; }
+
+.btn:hover {
+  opacity: 0.85;
+}
+
+.edit-schedule-form{
+  margin: 50px;
+}
