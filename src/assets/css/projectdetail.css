@@ -1,0 +1,48 @@
+.project-container {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* Cột trái - Thông tin dự án */
+  .project-details {
+    width: 45%;
+    padding: 20px;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+  }
+  
+  .project-image-container {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .project-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  /* Cột phải - Danh sách lịch trình */
+  .project-schedule {
+    width: 45%;
+    padding: 20px;
+    border: 3px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+  }
+  
+  .schedule-item {
+    margin-top: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tieude {
+font-weight: bolder;
+  }
+  

@@ -1,0 +1,282 @@
+/* events.css */
+.post-list .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.post-list .loading-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #666;
+}
+
+.post-list .spinner {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 4px solid #3498db;
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.post-list .events-inner {
+    background: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.post-list .add-post {
+    margin-bottom: 20px;
+    display: block; /* Đảm bảo hiển thị container */
+}
+
+.post-list .button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block; /* Đảm bảo hiển thị nút */
+    text-decoration: none; /* Loại bỏ gạch chân của Link */
+}
+
+.post-list .button-primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.post-list .button-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.post-list .no-posts {
+    text-align: center;
+    color: #6b7280;
+    padding: 20px;
+}
+
+.post-list .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Khôi phục 2 cột cố định */
+    gap: 20px;
+}
+
+.post-list .post-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.post-list .post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.post-list .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #e5e7eb;
+    position: relative;
+}
+
+.post-list .post-date {
+    font-size: 14px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.post-list .post-menu {
+    position: relative;
+}
+
+.post-list .menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 18px;
+    padding: 5px;
+    line-height: 1;
+}
+
+.post-list .menu-button:hover {
+    color: #2563eb;
+}
+
+.post-list .dropdown-menu {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    min-width: 150px;
+    padding: 5px 0;
+    z-index: 10000;
+}
+
+.post-list .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    color: #6b7280;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.post-list .dropdown-item:hover {
+    background: #f1f5f9;
+    color: #dc2626;
+}
+
+.post-list .post-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.post-list .post-content {
+    padding: 15px;
+}
+
+.post-list .post-title a {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.post-list .post-title a:hover {
+    text-decoration: underline;
+}
+
+.post-list .post-excerpt {
+    color: #4b5563;
+    margin: 10px 0;
+}
+
+.post-list .post-details p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 5px 0;
+}
+
+.post-list .post-details svg {
+    margin-right: 5px;
+}
+
+.post-list .post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 15px 0;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 10px;
+}
+
+.post-list .action-button {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: inherit;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.post-list .action-button:hover {
+    color: #2563eb;
+}
+
+.post-list .share-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.post-list .comments-section {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 15px;
+}
+
+.post-list .comment {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.post-list .comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+.post-list .comment-content {
+    flex: 1;
+}
+
+.post-list .comment-author {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.post-list .comment-time {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.post-list .reply-button {
+    background: none;
+    border: none;
+    color: #2563eb;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.post-list .reply-button:hover {
+    text-decoration: underline;
+}
+
+.post-list .no-comments {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.post-list .comment-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.post-list .comment-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+}
+
+.post-list .comment-input input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}

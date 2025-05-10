@@ -16,7 +16,6 @@ export function useAuth(loginType) {
         try {
             const endpoint = loginType === "google" ? "/google" : "/login";
             const response = await axios.post(`${API_URL}${endpoint}`, data, {
-                headers: { "Content-Type": "application/json" },
                 withCredentials: true, // ✅ Ensures JWT is stored in cookies
             });
 
@@ -36,13 +35,20 @@ export function useAuth(loginType) {
                 navigate("/role");
                 return;
             }
+            if(user.role=='Admin'){
+                navigate('/admin')
+                return
+            }
+            if(user.role=='Organization'){
+                navigate('/project')
+            }
 
             navigate("/");
         } catch (error) {
             console.error(`${loginType} Login Error:`, error);
             Swal.fire({
                 title: "Error!",
-                text: error.response?.data?.message || "Login failed!",
+                text: error.response?.data?.error || "Login failed!",
                 icon: "error",
                 confirmButtonText: "Try Again",
             });
@@ -106,7 +112,7 @@ export function useRegister() {
             console.error("Registration Error:", error);
             Swal.fire({
                 title: "Error!",
-                text: error.response?.data?.message || "Registration failed!",
+                text: error.response?.data?.error || "Registration failed!",
                 icon: "error",
                 confirmButtonText: "Try Again",
             });
@@ -123,11 +129,14 @@ export function useChooseRole() {
 
     const handleChooseRole = async (roleData) => {
         try {
-            await axios.post(`${API_URL}/role`, roleData, {
+          const response = await axios.post(`${API_URL}/role`, roleData, {
                 headers: { "Content-Type": "application/json" },
                 withCredentials: true,
             });
-
+            if (response.data.redirectUrl) {
+                window.location.href = response.data.redirectUrl; // Redirect for Organization role
+                return;
+            }
             Swal.fire({
                 title: "Success!",
                 text: "Role successfully changed!",
@@ -188,11 +197,11 @@ export function useAuthStatus() {
 }
 
 export function useChangePassword() {
-    const handleChangePassword = async (oldPassword, newPassword) => {
+    const handleChangePassword = async (oldPassword, newPassword,confirmPassword) => {
         try {
             const response = await axios.post(
                 `${API_URL}/change-password`, 
-                { oldPassword, newPassword }, 
+                { oldPassword, newPassword,confirmPassword }, 
                 {
                     headers: { "Content-Type": "application/json" },
                     withCredentials: true, // ✅ Sends cookies with request
@@ -211,7 +220,7 @@ export function useChangePassword() {
             console.error("Change Password Error:", error);
             Swal.fire({
                 title: "Error!",
-                text: error.response?.data?.message || "Failed to change password!",
+                text: error.response?.data?.error || "Failed to change password!",
                 icon: "error",
                 confirmButtonText: "Try Again",
             });
@@ -250,9 +259,9 @@ export function useForgotPassword() {
 export function useResetPassword() {
     const navigate = useNavigate();
 
-    const handleResetPassword = async (token, newPassword) => {
+    const handleResetPassword = async (token, newPassword, confirmPassword) => {
         try {
-            const response = await axios.post(`${API_URL}/reset-password`, { token, newPassword });
+            const response = await axios.post(`${API_URL}/reset-password`, { token, newPassword,confirmPassword });
 
             Swal.fire({
                 title: "Success!",
@@ -267,7 +276,7 @@ export function useResetPassword() {
             console.error("Reset Password Error:", error);
             Swal.fire({
                 title: "Error!",
-                text: error.response?.data?.message || "Failed to reset password!",
+                text: error.response?.data?.error || "Failed to reset password!",
                 icon: "error",
                 confirmButtonText: "Try Again",
             });
